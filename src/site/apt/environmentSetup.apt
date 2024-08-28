@@ -1,0 +1,385 @@
+	------
+	Environment Setup
+	------
+	
+<<Environment Setup>>
+
+	
+	BPS code is kept in git. You can check it out like this:
+
+
++---------------------
+git clone ssh://<SIGNUM>@gerrit.ericsson.se:29418/AIA/com.ericsson.component.aia.services/bps
++---------------------
+
+* Build client locally
+
+  Full build with integration tests
+
++---------------------
+mvn clean install  
++---------------------
+
+  Build without tests
+
++---------------------
+mvn clean install -DskipTests=true
++---------------------
+
+  Build without checkstyle, PMD, Code-Coverage
+
++---------------------
+mvn clean install -Dcheckstyle.skip=true -Dpmd.skip=true  -Dcpd.skip=true -Djacoco.skip=true
++---------------------
+
+* Build documentation
+
+  With following command it will generate the site at <<target/site/index.html>>:
+
++---------------------
+mvn clean site -DskipTests=true
++---------------------
+
+  With following command it will generate the site at <<target/site/index.html>> with javadoc:
+
++---------------------
+mvn clean site -Dmaven.javadoc.skip=false
++---------------------
+		
+
+	To setup IDEs for development, follow this guide.
+	
+Install JDK
+	
+	* Download and install the latest update of Oracle JDK Java SE 8 (version 8u101)
+	
+	* Add JAVA_HOME environment variable by opening up the System Properties, selecting the "Advanced" tab, and the "Environment Variables" button, then adding the JAVA_HOME variable in the system variables with the value set to the directory where the JDK is installed
+	
+	* In the same dialog, add %JAVA_HOME%\bin to the Path environment variable to make Java commands available in the command line
+ 
+Install Maven
+
+	*Download Maven 3.3.9 from http://archive.apache.org/dist/maven/maven-3/3.3.9/binaries/
+	
+	* Extract to any local folder
+	
+	* Add the M2_HOME environment variable by opening up the System Properties, selecting the "Advanced" tab, and the "Environment Variables" button, then adding the M2_HOME variable in the system variables with the value set to the apache-maven-3.3.9 folder extracted from the zip
+	
+	* In the same dialog, add %M2_HOME%\bin to the Path environment variable to make Maven available in the command line
+	
+	* Open a new command prompt and type <<mvn -version>> and this should print appropriate Maven version - a proof that everything works fine
+	
+	* Copy this Maven settings.xml into your local c:/Users/<your_ericsson_id>/.m2/  folder (in case .m2/ folder does not exist create it):
+
++---------------------
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <mirrors>
+    <mirror>
+      <!-- This sends everything else to /public -->
+      <id>nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <url>http://eselivm2v238l.lmera.ericsson.se:8081/nexus/content/groups/public</url>
+    </mirror>
+  </mirrors>
+  <profiles>
+    <profile>
+      <id>nexus</id>
+      <!-- Enable snapshots for the built in central repo to direct -->
+      <!-- all requests to nexus via the mirror -->
+      <repositories>
+        <repository>
+          <id>central</id>
+          <url>http://central</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+      </repositories>
+     <pluginRepositories>
+        <pluginRepository>
+          <id>central</id>
+          <url>http://central</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+    <!-- JBOSS REPO -->
+    <profile>
+      <id>jboss-public-repository</id>
+      <repositories>
+        <repository>
+          <id>jboss-public-repository-group</id>
+          <name>JBoss Public Maven Repository Group</name>
+          <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+          <layout>default</layout>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+       <pluginRepository>
+          <id>jboss-public-repository-group</id>
+          <name>JBoss Public Maven Repository Group</name>
+          <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+          <layout>default</layout>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+    <profile>
+      <id>jboss-deprecated-repository</id>
+      <repositories>
+        <repository>
+          <id>jboss-deprecated-repository</id>
+          <name>JBoss Deprecated Maven Repository</name>
+          <url>https://repository.jboss.org/nexus/content/repositories/deprecated/</url>
+          <layout>default</layout>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+            <updatePolicy>never</updatePolicy>
+          </snapshots>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <!-- make the profile active all the time -->
+    <activeProfile>nexus</activeProfile>
+  </activeProfiles>
+  <pluginGroups>
+    <!-- define the sonatype plugin group, so the nexus plugins will work without typing the groupId -->
+    <pluginGroup>org.sonatype.plugins</pluginGroup>
+  </pluginGroups>
+</settings>
++---------------------
+	
+	* If you have Eclipse already installed, make sure that your Maven installation in Eclipse points to appropriate settings.xml file in c:/Users/<your_ericsson_id>/.m2/ folder (Window -> Preferences -> Maven -> Installations, 'Global settings for embedded installation')
+	
+	* Use <<mvn clean package>> for building your projects (run this from the top-folder of your project)
+	
+	* Maven cheat sheet is available {{{http://maven.apache.org/guides/MavenQuickReferenceCard.pdf}here}}
+	
+	
+Install Eclipse
+
+	We use the Eclipse IDE as our development environment. 
+	The eclipse development plugins we require include:
+	
+	*Eclipse IDE for Java EE Developers 
+	 Eclipse Java EE IDE is an all-in-one package for creating web applications
+	
+	*BOSS AS Tool(7.1.1)
+	 Provides adapters capable of deployment of project for JBOSS Installation
+	
+	*M2E (1.0.200)
+	 Maven integration in Eclipse
+	
+	*EGIT (1.3.0)
+	 Eclipse GIT Team Provider
+	
+	*PMD (3.2.6)
+	 PMD for Eclipse
+	
+	*Emma (1.5.3)
+	 EclEmma plug-ins for Eclipse with online help
+	
+	You Need to enable code formatting manually:
+	Window -> Preferences -> Java -> Editor -> Save Actions. Tick 'Perform the selected actions on save' and Tick 'Format source code'.
+	
+	In the Save Actions window you can enable and configure 'Additional Actions' that clean up your code and prevent many PMD errors.
+	
+Eclipse Maven Settings
+
+	Make sure that your Maven installation in Eclipse points to appropriate settings.xml file in c:/Users/<your_ericsson_id>/.m2/ folder (Window -> Preferences -> Maven -> User Settings)
+	
+Install GIT Client
+
+	This guide applies to using git on your laptop, not the IT Hub. There shall be no mention of the IT Hub in this document, aside from the preceding two.
+	
+	If you want to use Git on Windows, you need this:
+	
+	*Go to http://git-scm.com/ and download the git installer for windows, the latest and greatest. Run the installer
+	
+	*Tick the check boxes for "Windows Explorer Integration"
+	
+	*Choose "Run Git from the Windows Command Prompt"
+	
+	*If asked which SSH executable use, choose OpenSSH
+	
+	*Choose "Checkout as-is, commit Unix-style line endings"
+	
+Configure Git
+
+	Git should now be installed. Perform the following steps to configure it:
+
+	* The default home directory points to H:\. You should change this to C:\Users\<signum>, so that your settings are available when you are offline. To do that, create/set an environment variable with that value called HOME:
+	
+	* Start Control Panel and select System -> Advanced system settings -> Environment variables
+	
+	* In the User variables section, select variable HOME and ensure that it is set to C:\Users\<signum>
+	
+	* Update our git bash shortcut and use %HOME% to set the start up directory
+	
+	* Right click your git bash shortcut and click Properties. Change the value of ‘Start in:’ field to %HOME%. Click OK
+	
+	* Start Git Bash and execute the following commands:
+	
++----------------------------------------------------------------------------------------------------------
+git config --global user.name "<your_corpsig>" (e.g. lmcpare)
+git config --global user.email "<firstname.lastname>@ericsson.com" 
+git config --global http.proxy www-proxy.ericsson.se:8080
+git config --global core.autocrlf true (WINDOWS OS ONLY. See notes in red below)
+git config --global rerere.enabled 1 # Remembers resolved conflicts
+git config --global color.ui true
+git config --global gui.encoding utf-8
+git config --global push.default tracking
+git config --global core.excludesfile /c/Users/<your-signum>/.gitignore
++----------------------------------------------------------------------------------------------------------
+
+	
+	<<Important:>>
+	
+	* If you’re on a Windows machine, set core.autocrlf to true —  <<git config --global core.autocrlf true>>
+	This converts LF endings into CRLF when you check out code and vice versa when you checkin.
+	
+	* If you’re on a Unix/Linux/Mac machine, set core.autocrlf to input — << git config --global core.autocrlf input>>
+	No conversion when you check out code, however if a file with CRLF endings accidentally gets introduced, Git will convert CRLF to LF on commit.
+	
+	*Make sure <firstname.lastname> is exactly as in Outlook. You may have your initials in capital letters. If not configured as in outlook, when it comes to push to remote, you will get the error:
+	
++----------------------------------------------------------------------------------------------------------
+! [remote rejected] HEAD -> refs/for/projectX (you are not committer UserY@ericsson.com)
++----------------------------------------------------------------------------------------------------------
+
+	* The --global flag means that the configuration should apply to all your repositories (unless overridden). The configuration is stored in ~/.gitconfig.
+	
+	* You should configure Eclipse or IntelliJ to pick up the git settings from this .gitconfig file.
+	In general, you should merge your branches with the main branch. To configure Git to automatically set up new branches to merge with the remote branch they are tracking, run
+	git config --global branch.autosetupmerge always.
+ 
+	* If you will use Git on Unix, you will need to run the above git commands as well.
+	If you wish to use an editor other than vim the following line is needed:
+	git config --global core.editor "\path\to\editor"
+	
+Generate a public SSH key
+
+	The Git server (Gerrit) uses SSH keys for authentication. To be able to push your commits to the server, your public SSH key will need to be registered on the server. Follow these instructions if you don't possess an SSH key from your UNIX account already. If you do have one, make sure to copy it (~/.ssh/id_rsa and ~/.ssh/id_rsa.pub) to the directory mentioned below instead of generating a new one. Note that the same key can and SHOULD be used when speaking git across all platforms.
+	Start Git Bash and execute next three steps:
+	
+	* ssh-keygen -t rsa - press enter when prompted with: Enter file in which to save the key
+	
+	* The next prompt is: Enter passphrase (empty for no passphrase) - If you want, just hit enter here for passwordless login. This is advisable for productivity purposes as it will save you lots of fingertaps in future, when pushing to the remote. If you are security-crazed then put in a password. But remember, other developers will have to keep looking away from the keyboard when you are pair-programming, as you goofily enter your password ad nauseum. They will sigh, roll their eyes etc.
+	
+	* The SSH public key will be generated in .ssh/ directory under your home directory, typically C:\Users\<username>\.ssh\id_rsa.pub on Windows
+	
+	* Enter your SSH key in Gerrit. Sign in to the Gerrit Server: Gerrit Central
+	
+	* Sign in using your corpsig (LAN username/password)
+	
+	* Select Settings,SSH Public Keys and click [Add Key ...]
+	
+	* Open the .ssh folder, copy the content from the id_rsa.pub file and paste this into the pane of gerrit and click on [Add]
+	
+	If using Git on Unix: 
+	
+	* Copy keys from Windows to Unix ~/.ssh. (files: id_rsa.pub and id_rsa)
+	
+	* Change the permissions of the private key: chmod 600 ~/.ssh/id_rsa
+	
+Install KDiff3
+
+	There is no merge tool included in Git, so you will need to install your own. One good merge tool is KDiff3, which this section will tell you how to install and configure. If you already have another merge tool installed, you can skip this section and instead search the internet on how to configure Git to use your tool.\
+	Download and install from http://sourceforge.net/projects/kdiff3/files/ version  0.9.95 -> KDiff3Setup_0.9.95-2.exe.
+
+	In a Git Bash or cygwin shell, run:
+	
++----------------------------------------------------------------------------------------------------------
+	git config --global mergetool.kdiff3.path "c:/Program Files/KDiff3/kdiff3.exe"
+	git config --global mergetool.keepBackup false
+	git config --global merge.tool kdiff3
+	git config --global difftool.kdiff3.path "c:/Program Files/KDiff3/kdiff3.exe"
+	git config --global diff.tool kdiff3
++----------------------------------------------------------------------------------------------------------
+	
+	Whenever there is a merge conflict, you will now be able to run git mergetool to do the merge graphically.\
+	To stop kdiff storing .orig backups of the merge conflict, go to Settings > Configure Kdiff3 > Directory > Backup files (.orig) and uncheck it.
+
+Install EGit
+
+	The Git plug-in for Eclipse is called EGit. Install the latest verison from {{{http://download.eclipse.org/egit/updates} the update site}}.\
+	Go to Window -> Preferences. Then go to General/Editors/Text Editors/Quick Diff. Choose "A Git Revision" from the drop down box.\
+	Tell Eclipse where to find your private SSH key.\ Window > Preferences > General > Network Connections > SSH2, normally it points to ~/ssh (tilde-slash-ssh), change to ~/.ssh.
+	
+Install Vagrant 
+
+	Install VirtualBox 5.0.2 and Vagrant 1.8.4.
+    
+    Log in to {{{https://arm.epk.ericsson.se/artifactory/webapp/#/home}Artifactory}}.
+     
+    After successful login, go to {{{https://arm.epk.ericsson.se/artifactory/api/vagrant/authand}this link}} copy your authentication token.
+     
+
+    Open a command line / shell and set the following environment variables:
+
+    Linux or GIT BASH:
+    
++----------------------------------------------------------------------------------------------------------
+    $ export ATLAS_TOKEN=<your authentication token>
+    $ export VAGRANT_SERVER_URL=https://arm.epk.ericsson.se/artifactory/api/vagrant
++----------------------------------------------------------------------------------------------------------
+
+
+    Windows (cmd.exe):
+    
++----------------------------------------------------------------------------------------------------------
+    C:\> set ATLAS_TOKEN=<your authentication token>
+    C:\> set VAGRANT_SERVER_URL=https://arm.epk.ericsson.se/artifactory/api/vagrant
++----------------------------------------------------------------------------------------------------------
+
+    In the local console, add the Vagrant box: 
+    
++----------------------------------------------------------------------------------------------------------
+    vagrant box add proj-aia-vagrant-local/aia-sandbox
++----------------------------------------------------------------------------------------------------------
+
+    Create a work folder and change into it
+   
+    Initialize the box:
+    
++----------------------------------------------------------------------------------------------------------
+    vagrant init aia-sandbox
++----------------------------------------------------------------------------------------------------------
+
+    Bring the VM up:
+    
++----------------------------------------------------------------------------------------------------------
+    vagrant up
++----------------------------------------------------------------------------------------------------------
+
+    The VM is now running.
+
+    Connect to the VM using a web browser on http://localhost:4080 or http://168.168.168.168, to view various tools in the platform have a web interface and/or expose APIs.
+
+	
+	
+	

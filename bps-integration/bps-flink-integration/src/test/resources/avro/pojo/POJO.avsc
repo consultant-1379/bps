@@ -1,0 +1,15 @@
+{
+  "type": "record",
+  "name": "POJO",
+  "namespace": "pojo",
+  "fields": [
+    {
+      "name": "SCANNER_ID",
+      "type": "long"
+    },
+    {
+      "name": "RBS_MODULE_ID",
+      "type": "long"
+    }
+  ]
+}

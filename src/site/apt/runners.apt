@@ -1,0 +1,158 @@
+	------
+	Runners
+	------
+
+<<BPS Application Configuration>>
+
+	Based on the business logic user will select BPS Template provided by the UI SDK.
+	Once created application will be configurable based on user’s preferences.
+	Based on the type of  template selected, certain configuration for Data Source and Data Sink must be done. BPS is providing this functionality.
+	In current version, BPS supports Spark based templates. Flink based templates will be delivered in future releases.
+	
+	Here is explanation on how to configure:
+		
+		* <<Spark Template based Application>> and 
+		
+		* <<Flink Template based Application (Planned for Future Releases)>>
+	
+
+How to configure Spark Template based Application
+
+	
+[./images/spark_small.jpg]
+	
+	Apache Spark is an open-source engine developed specifically for handling large-scale data processing and analytics. Spark offers the ability to access data in a variety of sources, including Hadoop Distributed File System (HDFS), OpenStack Swift, Amazon S3 and Cassandra.
+	Apache Spark is designed to accelerate analytics on Hadoop while providing a complete suite of complementary tools that include a fully-featured machine learning library (MLlib), a graph processing engine (GraphX) and stream processing.
+	One of the key reasons behind Apache Spark’s popularity, both with developers and in enterprises, is its speed and efficiency. Spark runs programs in memory up to 100 times faster than Hadoop MapReduce and up to 10 times faster on disk. Spark is natively designed to run in-memory, enabling it to support iterative analysis and more rapid, less expensive data crunching.
+	
+	BPS provides <<Spark Batch Template>> and <<Spark Streaming Template>>.
+
+		
+		
+		
+	Configure application based on <<Spark Batch Template>> 
+
++---------------------------------------------------------------------------------------------------------
+<step name="<step_name>">
+    <attribute name="uri" value="spark-batch://<new_application_name>"/>
+    <attribute name="sql" value="<sql_query>"/>
+</step>
++---------------------------------------------------------------------------------------------------------
+
+		eg. 
+	
++---------------------------------------------------------------------------------------------------------
+<step name="sales-analysis">
+    <attribute name="uri" value="spark-batch://cell-analysis"/>
+    <attribute name="sql" value="SELECT * FROM CELL_PERFORMANCE_DATA"/>
+</step>
++---------------------------------------------------------------------------------------------------------
+
+
+	In the example listed above we came across some attributes. They are listed in the table below.
+
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| Name | Description | Default | Valid Values                                           | Importance    	  |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| uri | This attribute declares usage of Spark Batch Template and defines the name of the newly created application. | /|/| mandatory|
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| sql |This attribute represents SQL query for incoming data. | / | / | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+
+
+	Configure application based on <<Spark Streaming Template>>
+
+		
++---------------------------------------------------------------------------------------------------------
+<step name="<step_name>">
+	<attribute name="uri" value="spark-streaming://<new_application_name>"/>
+	<attribute name="master.url" value="<master_url>"/>
+	<attribute name="spark.externalBlockStore.url" value="<spark_externalBlockStore_url>"/>
+	<attribute name="spark.externalBlockStore.baseDir" value="<spark_externalBlockStore_baseDir>"/>
+	<attribute name="streaming.checkpoint" value="<streaming_checkpoint>"/>
+	<attribute name="driver-class" value="<driver_class>" />
+</step>
++---------------------------------------------------------------------------------------------------------
+	
+		eg.
+
++---------------------------------------------------------------------------------------------------------
+<step name="ups-spark-streaming">
+	<attribute name="uri" value="spark-streaming://StreamingBps"/>
+	<attribute name="master.url" value="spark://207.184.161.138:7077"/>
+	<attribute name="spark.externalBlockStore.url" value="alluxio://localhost:19998"/>
+	<attribute name="spark.externalBlockStore.baseDir" value="alluxio://localhost:19998/staging/ups/"/>
+	<attribute name="streaming.checkpoint" value="alluxio://localhost:19998/ups-checkpoint/kafka"/>
+	<attribute name="driver-class" value="com.ericsson.aia.bps.streaming.correlations.StreamingBps" />
+</step>
++---------------------------------------------------------------------------------------------------------
+
+	In the example listed above we came across some attributes. They are listed in the table below.
+		
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| Name | Description | Default | Valid Values                                           | Importance    	  |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| uri | This attribute declares usage of Spark Streaming Template and defines the name of the newly created application. | /|/| mandatory|
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| master.url | This attribute is used to specify the master URL for a distributed cluster. If the value given is “local”, it will run locally with one thread, or local[N] it will run locally with N threads. local[*] will run application locally with as many worker threads as logical cores on machine. spark://HOST:PORT format gives option to connect to the given Spark standalone cluster master. The port must be whichever one your master is configured to use, which is 7077 by default. | / | / | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| driver-class | This attribute represents fully classified Java class that implements BPS interface. | /|/| mandatory|
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| spark.externalBlockStore.url | This attribute represents Spark external blockstore url. | / | / | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| spark.externalBlockStore.baseDir | This attribute represents Spark external blockstore uri. | /|/| optional|
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| streaming.checkpoint |This attribute represents Spark streaming checkpoint url. | / | / | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+
+<<<Note>>> :Step properties of Spark-Batch, Spark-Stream, and Spark-ML can be configured with optional parameters, refer following links for more details. 
+			
+		* {{{https://spark.apache.org/docs/latest/configuration.html#application-properties} Application Specific properties}}
+		
+		* {{{https://spark.apache.org/docs/latest/configuration.html#runtime-environment}  Runtime specific properties }}
+		
+		* {{{https://spark.apache.org/docs/latest/configuration.html#shuffle-behavior } Spark Shuffle-behavior specific properties}}
+		
+		* {{{https://spark.apache.org/docs/latest/configuration.html#spark-streaming } Spark Streaming specific properties}}
+	
+
+How to configure Flink Template based Application
+
+	
+[./images/flink_small.jpg] 
+	
+	{{{ https://flink.apache.org/}Apache Flink}} is a community-driven open source framework for distributed big data analytics, like {{{http://hadoop.apache.org/}Hadoop}} and {{{http://spark.apache.org/}Spark}}. The core of Apache Flink is a distributed streaming dataflow engine written in Java and Scala.		
+	
+	BPS provides <<Flink Streaming Template>> with Kafka data source and Kafka data sink support.
+
+		
+		
+	Configure application based on <<Flink Streaming Template>>
+  
+	
++---------------------------------------------------------------------------------------------------------
+ <step name="<step_name>">
+     <attribute name="uri" value="flink-streaming://<new_application_name>"/>
+     <attribute name="driver-class" value="<driver_class>" />
+ </step>
++---------------------------------------------------------------------------------------------------------
+
+		eg.
+
++---------------------------------------------------------------------------------------------------------
+ <step name="flink-streaming">
+      <attribute name="uri" value="flink-streaming://EpsFlinkStreamingHandler"/>
+      <attribute name="driver-class" value="com.ericsson.component.aia.services.bps.flink.test.app.SampleFlinkStreamingJobRunner" />
+ </step>
++---------------------------------------------------------------------------------------------------------
+
+	In the example listed above we came across some attributes. They are listed in the table below.
+		
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| Name | Description | Default | Valid Values                                           | Importance    	  |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| uri | This attribute declares usage of Flink Streaming Template and defines the name of the newly created application. | /|/| mandatory|
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| driver-class | This attribute represents fully classified Java class that implements BPS interface. | /|/| mandatory|
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+	

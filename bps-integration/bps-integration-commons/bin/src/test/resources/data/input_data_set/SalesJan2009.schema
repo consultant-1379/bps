@@ -1,0 +1,15 @@
+message m {
+  optional int32 ID;
+  optional binary TRANSACTION_DATE;
+  optional binary PRODUCT;
+  optional int32 PRICE;
+  optional binary PAYMENT_TYPE;
+  optional binary NAME;
+  optional binary CITY;
+  optional binary STATE;
+  optional binary COUNTRY;
+  optional binary ACCOUNT_CREATED;
+  optional binary LAST_LOGIN;
+  optional double LATITUDE;
+  optional double LONGITUDE;
+}

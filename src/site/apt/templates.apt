@@ -1,0 +1,79 @@
+	------
+	Templates
+	------
+
+<<Templates>>
+
+		
+	
+	BPS is introducing templates as powerful way to ease development, give agility to developers to focus on business logic implementation in already generated code and providing cheaper deliverability to customer. Template based application development uses <<codified architecture>> which generates more than 90% of the code from the platform independent model. This approach generates most of the infrastructure code and keeps architecture cost fixed, eliminates training cost for developers and provides faster solution delivery on demand.
+	
+	<<Codified architecture>>
+	
+	
+[./images/codif_arch.jpg]
+	
+	BPS provides three templates: <<Batch Processing (Spark based)>>, <<Stream Processing (Spark based) Template>> and <<Stream Processing (Flink based) Template>>.
+	
+	In the future releases, BPS is planning to deliver Stream Processing (Flink based) Template.
+	
+Batch Processing (Spark based) Template
+	
+		
+			* <<Description:>> This template demonstrates how to process a batch of events coming from Kafka or any other File source (SQL and NoSQL).
+			
+			* <<Usage:>> To use this template simply select it from list of available templates in {{{http://analytics.ericsson.se/}AIA Portal}} – GetStarted. Follow the steps given to create application based on this template.
+						
+			* <<Limitations:>> BPS only supports {{{https://hive.apache.org/}Hive}}   SQL. 
+	
+Stream Processing (Spark based) Template
+	 
+			
+			* <<Description:>> This template demonstrates how to process a stream of events, using Apache Spark. The template covers different cases on how to integrate with inbound streams, for example Apache Kafka.
+			
+			* <<Usage:>> To use this template simply select it from list of available templates in {{{http://analytics.ericsson.se/}AIA Portal}} – GetStarted. Follow the steps given to create application based on this template. In order to use this template user will have to give implementation of his own Runner class that should extend <<SparkStreamingJobRunner>> class. Please refer to {{{./tutorial.html}this}} tutorial for more info.
+
+					
+Stream Processing (Flink based) Template
+	 
+			
+			* <<Description:>> This template demonstrates how to process a stream of events, using Apache Flink. The template covers different cases on how to integrate with inbound streams, for example Apache Kafka.
+			
+			* <<Usage:>> To use this template simply select it from list of available templates in {{{http://analytics.ericsson.se/}AIA Portal}} – GetStarted. Follow the steps given to create application based on this template. In order to use this template user will have to give implementation of his own Runner class that should extend <<BpsFlinkStreamingJobRunner>> class. Please refer to {{{./tutorial.html}this}} tutorial for more info.
+
+						
+
+		To create application based on BPS supported templates, please refer to {{{http://analytics.ericsson.se/}AIA Portal}}.
+
+
+What data formats does BPS support?
+
+	
+		Currently BPS has following support for {{{./dataSource.html}data source}} and {{{./dataSink.html}data sink}}:
+	
+*--------------------------------------------------------*----------------------------------------------------*
+||Data Source<<<*>>>                                            || Data Sink<<<*>>>                                       |
+*--------------------------------------------------------*----------------------------------------------------*
+| {{{ http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HdfsUserGuide.html } HDFS }}	             | {{{http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HdfsUserGuide.html } HDFS }}	      |
+*--------------------------------------------------------*----------------------------------------------------*
+| {{{ https://hive.apache.org/ } Hive }}       	         | {{{ https://hive.apache.org/ } Hive }}	          |
+*--------------------------------------------------------*----------------------------------------------------*
+|{{{ https://en.wikipedia.org/wiki/Java_Database_Connectivity } JDBC}} | {{{ https://en.wikipedia.org/wiki/Java_Database_Connectivity } JDBC}}          |
+*--------------------------------------------------------*----------------------------------------------------*
+|{{{ http://kafka.apache.org/ } Kafka }}				 | {{{ http://kafka.apache.org/ } Kafka }}	          |
+*--------------------------------------------------------*----------------------------------------------------*
+| File 										     	         | File            |
+*--------------------------------------------------------*----------------------------------------------------*
+| {{{ http://www.alluxio.org/ } Alluxio}} 	will be added in future releases.	| {{{ http://www.alluxio.org/ } Alluxio}} 			     	         |            |
+*--------------------------------------------------------*----------------------------------------------------*
+| {{{http://cassandra.apache.org/ } Cassandra}} will be added in future releases.							     	         |            |
+*--------------------------------------------------------*----------------------------------------------------*
+| {{{https://hbase.apache.org/ } HBase}} will be added in future releases.							     	         |            |
+*--------------------------------------------------------*----------------------------------------------------*
+
+
+  (<<<*>>>) Support depends on type of template selected for development.
+  
+[./images/formats.jpg] 
+
+

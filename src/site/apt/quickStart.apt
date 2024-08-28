@@ -1,0 +1,21 @@
+	------
+	Quick Start
+	------
+	
+<<Quick Start>>
+	
+	
+	Here is the information to help you get started with using BPS applications. 
+	
+ * Download the application
+ 
+ 	Go to AIA Portal and go to {{{http://analytics.ericsson.se/#/GetStarted}Get Started page}}. Follow the steps to create new app based on selected template. Download it by clicking the button.
+ 	
+ * Follow the steps from the README file in the downloaded package.
+ 
+ * Deployment can be done locally, on Vagrant Box or in a cluster environment.
+ 	
+ 
+ 	
+
+	

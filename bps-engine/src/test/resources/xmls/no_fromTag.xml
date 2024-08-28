@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FlowDefinition xmlns="urn:com:ericsson:schema:xml:oss:fbp_flow" xmlns:oc="urn:com:ericsson:schema:xml:oss:oss_common" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" oc:ns="com.ericsson.oss.services" oc:name="CSLSolutionSet" oc:version="1.0.0">
+   <oc:modelCreationInfo author="eachsaj" creationDate="25/5/2016">
+      <oc:designedModel componentId="BatchProcessingSpark" />
+   </oc:modelCreationInfo>
+   <oc:desc>ExtEps Test for an extension Simple Batch Processing</oc:desc>
+   <input name="book">
+      <attribute name="uri" value="file:///var/tmp/aia_resources/resources/BPS_testsets/file_xml_json_csv_text_postgres_query/input/book.xml" />
+      <attribute name="header" value="true" />
+      <!-- if this false define schema in json format and use the option -Dheader on deployment -->
+      <attribute name="inferSchema" value="true" />
+      <attribute name="drop-malformed" value="true" /> vi
+      <attribute name="data.format" value="xml" />
+      <attribute name="skip-comments" value="true" />
+      <attribute name="quote" value="&quot;" />
+      <attribute name="table-name" value="testAiaXMLTable" />
+      <attribute name="rootTag" value="catalog"/>
+      <attribute name="rowTag" value="book"/>
+   </input>
+
+   <!--output name="text-file-out-put">
+      <attribute name="uri" value="file:///tmp/out.text" />
+      <attribute name="data.format" value="text" />
+      <attribute name="header" value="true" />
+   </output-->
+   <output name="postgres-out-put">
+      <attribute name="uri" value="JDBC://jdbc:postgresql://192.168.0.253:5432/postgres"/>
+      <attribute name="driver" value="org.postgresql.Driver"/>
+      <attribute name="user" value="root"/>
+      <attribute name="password" value="Ericsson01"/>
+      <attribute name="table.name" value="bookResult"/>
+      <attribute name="data.save.mode" value="overwrite"/>
+   </output>
+   <step name="process_books">
+      <attribute name="uri" value="spark-batch-sql://book" />
+      <attribute name="sql" value="SELECT title, genre FROM testAiaXMLTable WHERE price &lt; 5"/>
+
+   </step>
+   <path>
+      <to uri="book" />
+      <to uri="process_books" />
+      <to uri="postgres-out-put" />
+   </path>
+</FlowDefinition>

@@ -1,0 +1,2 @@
+com.ericsson.component.aia.services.bps.flink.datasourceservice.BpsFlinkKafkaDataSourceService
+com.ericsson.component.aia.services.bps.flink.datasourceservice.BpsFlinkJdbcDataSourceService

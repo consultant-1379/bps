@@ -1,0 +1,329 @@
+	------
+	Data Sink
+	------
+
+<<Spark Data Sink Types>>
+
+		All the data sink types are described with <<output>> tag in flow.xml file.
+		Based on the type of output data, the output tag will hold different attributes.
+		This page will try to explain in detail the purpose and meaning of each and every attribute under certain sink data.
+		
+<<File>> Data Sink
+
++---------------------------------------------------------------------------------------------------------
+<output name="<data_sink_name>">
+     <attribute name="uri" value="file://<path_to_output_file>" />
+     <!-- /// for Windows and // for Linux OS -->
+     <attribute name="data.format" value="<data_format>" /> 
+</output>
++---------------------------------------------------------------------------------------------------------
+
+	eg.
+	
++---------------------------------------------------------------------------------------------------------
+ <output name="file-out-put">
+      <attribute name="uri" value="file:///tmp/batch-op" />
+      <!-- /// for Windows and // for Linux OS -->
+      <attribute name="data.format" value="json" /> 
+ </output>
++---------------------------------------------------------------------------------------------------------	
+
+		In the example listed above we came across some attributes. They are listed in the table below.
+		
+		
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| Name | Description | Default | Valid Values                                           | Importance    	  |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| uri | This attribute is used to specify the data type and, if it is case of batch data, location of data. If output is data stream, Kafka topic should be stated. | /|/| mandatory|
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| data.format | This attribute represents data format.	 | / | json, text, orc and parquet | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+
+				
+<<Hive>> Data Sink
+
++---------------------------------------------------------------------------------------------------------
+ <output name="<data_sink_name>">
+    <attribute name="uri" value="hive://<hive_table_name>"/>
+    <attribute name="data.format" value="<data_format>"/>
+    <attribute name="partition.columns" value="<partition_columns>"/>
+    <attribute name="data.save.mode" value="error/append/overwrite/ignore"/>
+ </output>
++---------------------------------------------------------------------------------------------------------
+
+	eg.
+
++---------------------------------------------------------------------------------------------------------
+  <output name="hive-output">
+    <attribute name="uri" value="hive://output_hdfs_text_input"/>
+    <attribute name="data.format" value="parquet"/>
+    <attribute name="partition.columns" value="GLOBAL_CELL_ID"/>
+    <attribute name="data.save.mode" value="Append"/>
+  </output>
++---------------------------------------------------------------------------------------------------------	
+	
+	In the example listed above we came across some attributes. They are listed in the table below. 
+		
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| Name | Description | Default | Valid Values                                           | Importance    	  |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| uri | This attribute states where the data should be stored using Hive. | /|/| mandatory|
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| data.format | This attribute specifies which data format should be used. | / | json, text, orc and parquet | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| partition.columns | 	This attribute specifies partition by column name. |	/ | / | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| data.save.mode | Save operations can optionally take a SaveMode, that specifies how to handle existing data if present. It is important to realize that these save modes do not utilize any locking and are not atomic. Additionally, when performing an Overwrite, the data will be deleted before writing out the new data. |	/ | error/append/overwrite/ignore | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+
+		
+<<Jdbc>> Data Sink
+
++---------------------------------------------------------------------------------------------------------
+<input name="<data_sink_name>">
+    <attribute name="uri" value="JDBC://<JDBC data source>"/>
+    <attribute name="jdbc.driver" value="jdbc_driver"/>
+    <attribute name="jdbc.user" value="<jdbc_user>"/>
+    <attribute name="jdbc.password" value="<jdbc_password>"/>
+    <attribute name="table" value="<table_name>"/>
+</input>	
++---------------------------------------------------------------------------------------------------------
+
+	eg.
+	
++---------------------------------------------------------------------------------------------------------
+<output name="jdbc-output">
+    <attribute name="uri" value="JDBC://jdbc:postgresql://127.0.0.1:5432/aiademo"/>
+    <attribute name="jdbc.driver" value="org.postgresql.Driver"/>
+    <attribute name="jdbc.user" value="aiauser"/>
+    <attribute name="jdbc.password" value="aiauser"/>
+    <attribute name="table" value="cell_ana_report_local_text_input"/>
+ </output>
++---------------------------------------------------------------------------------------------------------	
+
+		In the example listed above we came across some attributes. They are listed in the table below.
+		
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| Name | Description | Default | Valid Values                                           | Importance    	  |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| uri | This attribute states which JDBC data sink is being used. | /|/| mandatory|
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| jdbc.driver | This attribute specifies which JDBC driver should be used. | / | / | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| jdbc.user | This attribute specifies user that will have access to this DB. |	/ | / | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| jdbc.password | This attribute specifies JDBC password. |	/ | / | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| table | Underlying table name created in BPS Engine that will hold the persisted data. |	/ | / | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+			
+<<HDFS>> Data Sink 
+
++---------------------------------------------------------------------------------------------------------
+ <output name="<data_sink_name>">
+   <attribute name="uri" value="hdfs://<path_to_output_file>"/>
+   <attribute name="data.format" value="<data_format>"/>
+   <attribute name="partition.columns" value="partition_columns"/>
+ </output>
++---------------------------------------------------------------------------------------------------------
+
+	eg.
+	
++---------------------------------------------------------------------------------------------------------
+  <output name="hdfs-json-output">
+    <attribute name="uri" value="hdfs:///user/vagrant/output/json_cell_input"/>
+    <attribute name="data.format" value="json"/>
+    <attribute name="partition.columns" value="global_cell_id"/>
+  </output>
++---------------------------------------------------------------------------------------------------------	
+
+		In the example listed above we came across some attributes. They are listed in the table below.
+		
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| Name | Description | Default | Valid Values                                           | Importance    	  |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| uri | This attribute states location on HDFS where data should be stored. | /|/| mandatory|
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| data.format | This attribute gives value type. |	/ | / | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| partition.columns | This attribute specifies partition by column name. |	/ | / | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+		
+	<<Optional:>> To access external HDFS cluster it is necessary to include IP:PORT in the uri, eg:
+
++---------------------------------------------------------------------------------------------------------
+<attribute name="uri" value="hdfs://<IP:PORT>/<path_to_file>"/>	
++---------------------------------------------------------------------------------------------------------
+
+
+<<Alluxio>> Data Sink 
+
++---------------------------------------------------------------------------------------------------------
+<output name="<data_sink_name>">
+    <attribute name="uri" value="alluxio:/<path_to_output_file>"/>
+    <attribute name="data.format" value="<data_format>"/>
+    <attribute name="partition.columns" value="<partition_columns>"/>
+</output>
++---------------------------------------------------------------------------------------------------------
+	
+	eg.
+	
++---------------------------------------------------------------------------------------------------------
+<output name="alluxio-parquet-output">
+    <attribute name="uri" value="alluxio://output/parquet_output_hdfs_text_input"/>
+    <attribute name="data.format" value="parquet"/>
+    <attribute name="partition.columns" value="global_cell_id"/>
+</output>
++---------------------------------------------------------------------------------------------------------
+
+	In the example listed above we came across some attributes. They are listed in the table below.
+		
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| Name | Description | Default | Valid Values                                           | Importance    	  |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| uri | This attribute states location on Alluxio where data should be persisted. | /|/| mandatory|
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| data.format | This attribute specifies which data format should be used. | false | json, text, orc and parquet | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| partition.columns | This attribute specifies partition by column name. |	/ | / | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+		
+<<Kafka>> Data Sink
+
++---------------------------------------------------------------------------------------------------------
+<output name="<data_sink_name>">
+    <attribute name="uri" value="kafka://<kafka_topic_name>?<format=format_type>"/>
+    <attribute name="bootstrap.servers" value="<bootstrap_servers>"/>
+    <attribute name="eventType" value="event_type"/>
+  </output>	
++---------------------------------------------------------------------------------------------------------
+	
+	eg.
+	 
++---------------------------------------------------------------------------------------------------------
+<output name="kafka-output">
+    <attribute name="uri" value="kafka://radio_session_output?format=avro"/>
+    <attribute name="bootstrap.servers" value="localhost:9092"/>
+    <attribute name="eventType" value="correlation.LTE_ERAB_SESSION"/>
+  </output>		
++---------------------------------------------------------------------------------------------------------
+
+	In the example listed above we came across some attributes. They are listed in the table below.
+
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| Name | Description | Default | Valid Values                                           | Importance    	  |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| uri | This attribute represents Kafka Input Adapter (“kafka://”) and Kafka Topic name (“radio_up”). | /|/| mandatory|
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| data.format | This attribute specifies which data format should be used. | false | json, avro | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| bootstrap.servers |This attribute represents a list of host/port pairs used for establishing the initial connection to the Kafka cluster. | / | / | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| eventType | This attribute represents event types. |	/ | / | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| datawriter.class | This attribute specifies custom data writer which extends abstract com.ericsson.component.aia.services.bps.spark.datasinkservice.DataWriter\\<Dataset\\> class  | / | fully qualified class name | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+
+<<<Note : The option datawriter.class only applicable for BPS Spark implementation.>>> 
+
+<<Flink Data Sink Types>>
+
+		All the data sink types are described with output tag in flow.xml file.
+		Based on the type of output data, the output tag will hold different attributes.
+		This page will try to explain in detail the purpose and meaning of each and every attribute under certain sink data.
+
+<<Kafka>> Data Sink
+
++---------------------------------------------------------------------------------------------------------
+   <output name="<data_sink_name>">
+       <attribute name="uri" value="kafka://<kafka_topic_name>?<format=format_type>"/>
+       <attribute name="bootstrap.servers" value="<bootstrap_servers>"/>
+       <attribute name="eventType" value="event_type"/>
+       <attribure name="serialization.schema" value="<GenericRecord_serializationSchema>"/>
+       <attribute name="schemaRegistry.address" value="<schemaRegistry_address>"/>
+       <attribute name="schemaRegistry.cacheMaximumSize" value="<schemaRegistry_cacheMaximumSize>"/>
+     </output>
++---------------------------------------------------------------------------------------------------------
+
+    	eg.
+
++---------------------------------------------------------------------------------------------------------
+    <output name="output-stream">
+            <attribute name="uri" value="kafka://radio_session_topic_out?format=avro"/>
+            <attribute name ="bootstrap.servers" value="10.0.2.15:9092"/>
+            <attribute name="eventType" value="pojo.POJO"/>
+            <attribute name="serialization.schema" value="com.ericsson.component.aia.services.bps.flink.kafka.encoder.FlinkKafkaGenericRecordSerializationSchema"/>
+            <attribute name="schemaRegistry.address" value="http://localhost:8081"/>
+            <attribute name="schemaRegistry.cacheMaximumSize" value="50"/>
+        </output>
++---------------------------------------------------------------------------------------------------------
+
+    	In the example listed above we came across some attributes. They are listed in the table below.
+
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| Name | Description | Default | Valid Values                                           | Importance    	  |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| uri | This attribute represents Kafka Input Adapter (“kafka://”) and Kafka Topic name (“radio_up”). | -|kafka://radio_session_topic_out?format=avro| mandatory|
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| bootstrap.servers |This attribute represents a list of host/port pairs used for establishing the initial connection to the Kafka cluster. | - | 10.0.2.15:9092 | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| eventType | This attribute represents serialization schema for generic records. |	- | <Schema> | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| serialization.schema | This attribute represents event types. |	- | <Encoder class> | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| schemaRegistry.address | This attribute represents the address of the schema registry. |  http://localhost:8081 | http://10.0.2.20:8081 | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| schemaRegistry.cacheMaximumSize | This attribute represents the cache size to be used by schema registry. | 500000 | 50 | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+
+<<<Note : The option datawriter.class only applicable for BPS Spark implementation.>>> 
+
+
+<<Jdbc>> Data Sink
+
++---------------------------------------------------------------------------------------------------------
+<input name="<data_sink_name>">
+    <attribute name="uri" value="jdbc://<JDBC data source>"/>
+    <attribute name="driver" value="jdbc_driver"/>
+    <attribute name="user" value="<jdbc_user>"/>
+    <attribute name="password" value="<jdbc_password>"/>
+    <attribute name="table.name" value="<table_name>"/>
+    <attribute name="output.schema" value="<database_schema>"/>
+    <atrribute name="data.save.mode" value="<write_mode>" />
+</input>
++---------------------------------------------------------------------------------------------------------
+
+	eg.
+
++---------------------------------------------------------------------------------------------------------
+<output name="jdbc-output">
+    <attribute name="uri" value="jdbc://jdbc:postgresql://127.0.0.1:5432/aiademo"/>
+    <attribute name="driver" value="org.postgresql.Driver"/>
+    <attribute name="user" value="aiauser"/>
+    <attribute name="password" value="aiauser"/>
+    <attribute name="table.name" value="cell_ana_report_local_text_input"/>
+    <attribute name="output.schema" value="com.ericsson.component.aia.services.bps.flink.test.app.TableSchemaPojo"/>
+    <attribute name="data.save.mode" value="Overwrite"/>
+ </output>
++---------------------------------------------------------------------------------------------------------
+
+
+		In the example listed above we came across some attributes. They are listed in the table below.
+
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| Name | Description | Default | Valid Values                                           | Importance    	  |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| uri | This attribute states which JDBC data sink is being used. | -|jdbc://jdbc:postgresql://127.0.0.1:5432/aiademo| mandatory|
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| driver | This attribute specifies which JDBC driver should be used. | - | org.postgresql.Driver | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| user | This attribute specifies user that will have access to this DB. |	- | <user name> | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| jdbc.password | This attribute specifies JDBC password. |	- | <password> | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| table.name | Underlying table name created in BPS Engine that will hold the persisted data. |	- | <table name > | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| output.schema | Schema provided for database in order to create a table. Note: Currently Flink API has limitation which does not provide table schema in order to create data base table. So user needs to provide TableSchemaPojo in order to extract table schema. |	- | <Name of the class taken as POJO>| mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| data.save.mode | Persisted data to be saved in jdbc database. By Defaul Append Mode is Selected. | Append | <Append or Overwrite>| optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*

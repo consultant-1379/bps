@@ -1,0 +1,83 @@
+	------
+	BPS Spark JobRunner
+	------
+
+<<BPS Spark JobRunner>>
+
+[./images/spark_small.jpg]
+	
+	BPS support following spark specific JobRunner that can be configured as processing unit of the pipeline.
+
+[./images/SparkJobrunners.jpg]
+		
+		At the moment BPS provides SparkBatchJobRunner and SparkStreamingJobRunner.
+		
+		\
+		Here are the examples of how to configure:
+		
+		* <<Spark batch>> job runner  
+		
++---------------------------------------------------------------------------------------------------------
+<step name="sales-analysis">
+    <attribute name="uri" value="spark-batch://cell-analysis"/>
+    <attribute name="sql" value="SELECT * FROM CELL_PERFORMANCE_DATA"/>
+</step>
++---------------------------------------------------------------------------------------------------------
+
+		* <<Spark batch>> job runner for <<local>> testing 
+
++---------------------------------------------------------------------------------------------------------
+<step name="sales-analysis">
+    <attribute name="uri" value="spark-batch-local://cell-analysis"/>
+    <attribute name="sql" value="SELECT * FROM CELL_PERFORMANCE_DATA"/>
+</step>
++---------------------------------------------------------------------------------------------------------
+
+	In the example listed above we came across some attributes. These are mandatory attributes:\ 
+	
+				* <<uri>> represents batch job runner.
+		
+				* <<sql>> represents SQL query on the underlying table in Spark.
+		
+
+		* <<Spark Streaming>> job runner
+		
++---------------------------------------------------------------------------------------------------------
+<step name="ups-spark-streaming">
+	<attribute name="uri" value="spark-streaming://Streamingbps"/>
+	<attribute name="master.url" value="spark://localhost:7077"/>
+	<attribute name="spark.externalBlockStore.url" value="alluxio://localhost:19998"/>
+	<attribute name="spark.externalBlockStore.baseDir" value="alluxio://localhost:19998/staging/ups/"/>
+	<attribute name="streaming.checkpoint" value="alluxio://localhost:19998/ups-checkpoint/kafka"/>
+	<attribute name="driver-class" value="com.ericsson.aia.bps.streaming.correlations.Streamingbps" />
+</step>
++---------------------------------------------------------------------------------------------------------
+
+	In the example listed above we came across some attributes. These are mandatory attributes:\ 
+		
+		* <<uri>> represents job runner type and Kafka Topic
+	
+		* <<master.url>> represents Spark master
+		
+		* <<driver-class>> represents Spark driver class
+		
+	Here are optional attributes:
+	
+		* <<spark.externalBlockStore.url>> represents Spark external blockstore url
+		
+		* <<spark.externalBlockStore.baseDir>> represents Spark external blockstore uri
+		
+		* <<streaming.checkpoint>> represents Spark streaming checkpoint url	
+		
+<<<Note>>> :Step properties of Spark-Batch, Spark-Stream, and Spark-ML can be configured with optional parameters, refer following links for more details. 
+			
+		* {{{https://spark.apache.org/docs/latest/configuration.html#application-properties} Application Specific properties}}
+		
+		* {{{https://spark.apache.org/docs/latest/configuration.html#runtime-environment}  Runtime specific properties }}
+		
+		* {{{https://spark.apache.org/docs/latest/configuration.html#shuffle-behavior } Spark Shuffle-behavior specific properties}}
+		
+		* {{{https://spark.apache.org/docs/latest/configuration.html#spark-streaming } Spark Streaming specific properties}}
+			
+			
+			

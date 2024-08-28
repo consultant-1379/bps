@@ -1,0 +1,203 @@
+	------
+	Flow XML File
+	------
+
+
+
+<<About flow file>>
+	
+	Flow descriptor is an XML document that is the central interface for using BPS. It provides a <<declarative way>> of designing processing pipelines. It references BPS components and describes how event flow looks like. Flow descriptor is defined by Flow Framework and is used by BPS to determine:
+	
+		* What components should perform event processing
+		
+		* How event processing components are connected to each other
+		
+		* Where input events are coming from and where output events are going to 
+		
+	
+	In order to understand how BPS processes data, lets examine the flow.xml file.
+			
+	Example of flow.xml file:
+		
++---------------------------------------------------------------------------------------------------------
+<?xml version="1.0" encoding="UTF-8"?>
+<FlowDefinition xmlns="urn:com:ericsson:schema:xml:oss:fbp_flow" xmlns:oc="urn:com:ericsson:schema:xml:oss:oss_common" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" oc:ns="com.ericsson.oss.services" oc:name="CSLSolutionSet" oc:version="1.0.0">
+   <oc:modelCreationInfo author="exxxxxx" creationDate="25/5/2016">
+      <oc:designedModel componentId="BatchProcessingSpark" />
+   </oc:modelCreationInfo>
+   <oc:desc>BPS Test for Simple Batch Processing</oc:desc>
+   <input name="<data_source_name>">
+      <attribute name="uri" value="file://<path_to_input_file>" /> 
+      <!-- /// for Windows and // for Linux OS -->
+      <attribute name="header" value="<true/false>" />
+      <attribute name="inferSchema" value="<true/false>" />
+      <attribute name="drop-malformed" value="<true/false>" />
+      <attribute name="dateFormat" value="<date_format>" />
+      <attribute name="data.format" value="<data_format>" />
+      <attribute name="skip-comments" value="<true/false>" />
+      <attribute name="quote" value="<quote>" />
+      <attribute name="table-name" value="<table_name>" />
+   </input>
+   <output name="<data_sink_name>">
+      <attribute name="uri" value="file://<path_to_output_file>" />
+      <attribute name="data.format" value="<data_format>" />
+   </output>
+   <step name="<step_name>">
+      <attribute name="master.url" value="<master_url>" />
+      <attribute name="uri" value="spark-batch://<step_name>" />
+      <attribute name="sql" value="<sql_query>" />
+   </step>
+   <path>
+      <from uri="<data_source_name>" />
+      <to uri="<step_name>" />
+      <to uri="<data_sink_name>" />
+   </path>
+</FlowDefinition>
++---------------------------------------------------------------------------------------------------------
+
+		Now we will examine all the elements of flow.xml file in detail and explain the purpose of this file.
+		
+Pipe
+
+	Simplest form of BPS pipeline can be depicted as follow:
+
+[./images/pipe.jpg]
+	
+		BPS pipeline has three important aspects: <<multiple input data sources>>, <<steps>> <( current implementation supports single step only)> and <<multiple output data sinks>>.
+
+
+		Pipeline represents data processing job. User builds simple pipeline based on flow xml supported by BPS. \
+		Pipeline consists of set of operations that can read source of input data, transform that data, and write out the resulting output.\ 	  
+	 	
+		Example of Pipe:
+
++---------------------------------------------------------------------------------------------------------
+ <path>
+    <from uri="<data_source_name>" />
+    <to uri="<step_name>" />
+    <to uri="<data_sink_name>" />
+ </path>
++---------------------------------------------------------------------------------------------------------
+
+	eg.
+	
++---------------------------------------------------------------------------------------------------------
+ <path>
+    <from uri="file-stream-csv" />
+    <to uri="sales-analysis" />
+    <to uri="file-out-put" />
+ </path>
++---------------------------------------------------------------------------------------------------------
+		
+		As depicted above, pipe is embodied in <<path>> tag. It uses <<uri>> to give information on where the execution starts, where the business logic resides and where to write the result to.
+		It follows linear flow "from-to".
+		in this example it will start with loading data from <<file-stream-csv>>, continue to step <<sales-analysis>> where the business logic resides and write output to data sink defined in <<file-out-put>>.
+		
+			 	
+Data Source	
+	
+		Data source represents various types of sources which are fed to the pipeline as an input in order to carry-out operations on.
+		
+		Example of Data Source:
+
++---------------------------------------------------------------------------------------------------------
+<input name="<data_source_name>">
+      <attribute name="uri" value="file://<path_to_input_file>" />
+      <!-- /// for Windows and // for Linux OS -->
+      <attribute name="header" value="<true/false>" />
+      <attribute name="inferSchema" value="<true/false>" />
+      <attribute name="drop-malformed" value="<true/false>" />
+      <attribute name="dateFormat" value="<date_format>" />
+      <attribute name="data.format" value="<data_format>" />
+      <attribute name="skip-comments" value="<true/false>" />
+      <attribute name="quote" value="<quote>" />
+      <attribute name="table-name" value="<table_name>" />
+</input>
++---------------------------------------------------------------------------------------------------------
+
+	eg.
+
++---------------------------------------------------------------------------------------------------------
+<input name="file-stream-csv">
+      <attribute name="uri" value="file:///home/SalesJan2009.csv" />
+      <!-- /// for Windows and // for Linux OS -->
+      <attribute name="header" value="true" />
+      <attribute name="inferSchema" value="true" />
+      <attribute name="drop-malformed" value="true" />
+      <attribute name="dateFormat" value="SimpleDateFormat" />
+      <attribute name="data.format" value="text" />
+      <attribute name="skip-comments" value="true" />
+      <attribute name="quote" value="&quot;" />
+      <attribute name="table-name" value="sales" />
+</input>
++---------------------------------------------------------------------------------------------------------
+		Data Source is embodied in <<input>> tag. It holds many attributes that are essential for relevant data source input configuration.
+		For example, in <<uri>> tag, user should specify the data type and, if it is case of batch data, location of data. If input is data stream, Kafka topic should be stated.
+		
+		In example above, data is in csv file that resides on local file system clearly stated by 
+		
++---------------------------------------------------------------------------------------------------------	
+value="file:///home/SalesJan2009.csv"
++---------------------------------------------------------------------------------------------------------
+
+		In the example listed above we came across some attributes. You can look them up {{{./dataSource.html}here}}.
+		
+
+Step		
+	
+		Step is a logical operation that can be applied on input data in order to carry-out specific transformation or manipulate on input data in order to produce desired output.  
+		It resides in tag <<step>> of flow.xml. In Step, there are two types of interfaces to process data: <<sql>> and <<driver-class>>.
+		
+		Example of Step:
+		
++---------------------------------------------------------------------------------------------------------
+ <step name="<step_name>">
+      <attribute name="master.url" value="<master.url>" />
+      <attribute name="uri" value="spark-batch://<step_name>" />
+      <attribute name="sql" value="<sql_query>" />
+ </step>
++---------------------------------------------------------------------------------------------------------
+
+	eg.
+   
++---------------------------------------------------------------------------------------------------------
+ <step name="sales-analysis">
+      <attribute name="master.url" value="spark://207.184.161.138:7077" />  
+      <attribute name="uri" value="spark-batch://sales-analysis" />
+      <attribute name="sql" value="SELECT * FROM sales" />
+ </step>
++---------------------------------------------------------------------------------------------------------
+		
+		
+		
+		There are various examples of step configuration to be found {{{./sparkjobrunner.html}here}}.
+	
+		
+		
+Data Sink				
+
+
+		Data sink is the final destination where processed data needs to be persisted.
+		It resides in <<output>> tag of flow.xml.
+		
+		Example of Data Sink:
+
++---------------------------------------------------------------------------------------------------------
+ <output name="<data_sink_name>">
+      <attribute name="uri" value="file://<path_to_output_file>" />
+      <!-- /// for Windows and // for Linux OS -->
+      <attribute name="data.format" value="<data_format>" />
+ </output>
++---------------------------------------------------------------------------------------------------------
+
+	eg.
+
++---------------------------------------------------------------------------------------------------------
+ <output name="file-out-put">
+      <attribute name="uri" value="file:///tmp/batch-op" />
+      <!-- /// for Windows and // for Linux OS -->
+      <attribute name="data.format" value="json" />
+ </output>
++---------------------------------------------------------------------------------------------------------
+		
+		In the example listed above we came across some attributes. You can look them up {{{./dataSink.html}here}}.

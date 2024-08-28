@@ -1,0 +1,15 @@
+	------
+	The Beam Processing Service
+	------
+
+<<Basic Components of Beam Processing Service (BPS)>>
+
+
+	Basic Components of Beam Processing Service are shown in Diagram below.
+	
+[./images/BPSComponentsSmall2.jpg] 	
+
+
+	\
+	BPS Engine is the main entrance point to the execution of flow described by flow.xml file.
+

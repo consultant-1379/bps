@@ -1,0 +1,342 @@
+	------
+	Data Source
+	------
+
+<<Spark Data Source Types>>
+
+		All the data sources are described with <<input>> tag in flow.xml file.
+		Based on the type of input data, the input tag will hold different attributes.
+		This page will try to explain in detail the purpose and meaning of each and every attribute under certain source data type.
+		
+<<File>> Data Source
+
++---------------------------------------------------------------------------------------------------------
+<input name="<source_data_name>">
+    <attribute name="uri" value="file://<path_to_input_file>"/>
+    <!-- /// for Windows and // for Linux OS -->
+    <attribute name="header" value="<true/false>"/>
+    <attribute name="inferSchema" value="<true/false>"/>
+    <attribute name="drop-malformed" value="<true/false><true/false>"/>
+    <attribute name="dateFormat" value="<date_format>"/>
+    <attribute name="data.format" value="<data_format>"/>
+    <attribute name="skip-comments" value="<true/false>"/>
+    <attribute name="quote" value="<quote>"/>
+    <attribute name="table-name" value="<table_name>"/>
+</input>
++---------------------------------------------------------------------------------------------------------
+
+	eg.
+	
++---------------------------------------------------------------------------------------------------------
+<input name="local-text-input">
+    <attribute name="uri" value="file:///home/vagrant/input/cell_ana_report_text"/>
+    <!-- /// for Windows and // for Linux OS -->
+    <attribute name="header" value="true"/>
+    <attribute name="inferSchema" value="true"/>
+    <attribute name="drop-malformed" value="true"/>
+    <attribute name="dateFormat" value="SimpleDateFormat"/>
+    <attribute name="data.format" value="text"/>
+    <attribute name="skip-comments" value="true"/>
+    <attribute name="quote" value="&quot;"/>
+    <attribute name="table-name" value="CELL_PERFORMANCE_DATA"/>
+ </input>
++---------------------------------------------------------------------------------------------------------	
+
+		Input tag holds many attributes that are essential for relevant data source input configuration.
+		For example, in "uri" tag, user should specify the data type and, if it is case of batch data, location of data.\
+		If input is data stream, Kafka topic should be stated.
+				
+		In example above, data is in file that resides on local file system clearly stated by 
+		
++---------------------------------------------------------------------------------------------------------	
+value="file:///home/vagrant/input/cell_ana_report_text"
++---------------------------------------------------------------------------------------------------------
+
+		In the example listed above we came across some attributes. They are listed in the table below.
+		
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| Name | Description | Default | Valid Values                                           | Importance    	  |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| uri | Using this attribute, user should specify the data type and, if it is case of batch data, location of data. | /|/| mandatory|
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| header | When set to true the first line of files will be used to name columns and will not be included in data. All types will be assumed string. | false | true/false | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| inferSchema | Automatically infers column types. It requires one extra pass over the data. |	false | true/false | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| drop-malformed | Attribute used to deal with bad input data. Drops lines which have fewer or more tokens than expected or tokens which do not match the schema. |	true | true/false | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| dateFormat | This attribute specifies a string that indicates the date format to use when reading dates or timestamps. Custom date formats follow the formats at java.text.SimpleDateFormat. This applies to both DateType and TimestampType. By default, it is null which means trying to parse times and date by java.sql.Timestamp.valueOf() and java.sql.Date.valueOf(). |	null | / | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| data.format | This attribute specifies which data format can be used.	 |	/ | / | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| skip-comments | This attribute is used to skip comments from the source. |	true | true/false | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| quote | By default the quote character is “, but can be set to any character. This is written according to quoteMode. | “ | / | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| table-name | This attribute will be used to give name to the underlying table created in Spark that will hold the data from this input source.	 |	/ | / | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*				
+			
+<<Hive>> Data Source
+
++---------------------------------------------------------------------------------------------------------
+  <input name="<source_data_name>">
+    <attribute name="uri" value="hive://<hive_table>"/>
+    <attribute name="data.format" value=<data_format>/>
+  </input>
++---------------------------------------------------------------------------------------------------------
+	
+	eg.
+	
++---------------------------------------------------------------------------------------------------------
+  <input name="hive-input">
+    <attribute name="uri" value="hive://hdfs_par_input"/>
+    <attribute name="data.format" value="parquet"/>
+  </input>
++---------------------------------------------------------------------------------------------------------	
+
+
+	In the example listed above we came across some attributes. They are listed in the table below.
+		
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| Name | Description | Default | Valid Values                                           | Importance    	  |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| uri | Using this attribute, user should specify which Hive table holds input data. | /|/| mandatory|
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| data.format | This attribute gives value type. | parquet | parquet, json,... | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+
+	In the attribute <<uri>> it is stated which Hive table holds input data. <<data.format>> is optional attribute.
+
+		
+<<Jdbc>> Data Source
+		
++---------------------------------------------------------------------------------------------------------
+<input name="<source_data_name>">
+    <attribute name="uri" value="JDBC://<JDBC data source>"/>
+    <attribute name="jdbc.driver" value="jdbc_driver"/>
+    <attribute name="jdbc.user" value="<jdbc_user>"/>
+    <attribute name="jdbc.password" value="<jdbc_password>"/>
+    <attribute name="table" value="<table_name>"/>
+</input>
++---------------------------------------------------------------------------------------------------------
+	
+	eg.
+			
++---------------------------------------------------------------------------------------------------------
+<input name="jdbc-input">
+    <attribute name="uri" value="JDBC://jdbc:postgresql://127.0.0.1:5432/aiademo"/>
+    <attribute name="jdbc.driver" value="org.postgresql.Driver"/>
+    <attribute name="jdbc.user" value="aiauser"/>
+    <attribute name="jdbc.password" value="aiauser"/>
+    <attribute name="table" value="cell_ana_report_local_text_input"/>
+</input>
++---------------------------------------------------------------------------------------------------------	
+
+	In the example listed above we came across some attributes. They are listed in the table below.
+	
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| Name | Description | Default | Valid Values                                           | Importance    	  |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| uri | This attribute states which JDBC data source is being used. | /|/| mandatory|
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| jdbc.driver | This attribute specifies which JDBC driver should be used. | / | / | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| jdbc.user | This attribute specifies user that will have access to this DB. |	/ | / | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| jdbc.password | This attribute specifies JDBC password. |	/ | / | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| table | Underlying table name created in BPS Engine that will hold the data from this input source. |	/ | / | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+
+		
+			
+<<HDFS>> Data Source 
+
++---------------------------------------------------------------------------------------------------------
+<input name="<source_data_name>">
+    <attribute name="uri" value="hdfs://<path_to_file>"/>
+    <attribute name="header" value="<true/false>"/>
+    <attribute name="data.format" value="<data_format>"/>
+    <attribute name="table-name" value="<table_name>"/>
+</input>
++---------------------------------------------------------------------------------------------------------
+
+	eg.
+	
++---------------------------------------------------------------------------------------------------------
+ <input name="hdfs-json-input">
+    <attribute name="uri" value="hdfs:///user/vagrant/input/cell_ana_report_json"/>
+    <attribute name="header" value="true"/>
+    <attribute name="data.format" value="json"/>
+    <attribute name="table-name" value="CELL_PERFORMANCE_DATA"/>
+  </input>
++---------------------------------------------------------------------------------------------------------	
+	In the example listed above we came across some attributes. They are listed in the table below.
+		
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| Name | Description | Default | Valid Values                                           | Importance    	  |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| uri | This attribute states location on HDFS where data should reside. | /|/| mandatory|
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| header | When set to true the first line of files will be used to name columns in the table and will not be included in data. All types will be assumed string. | false | true/false | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| data.format | This attribute gives value type. |	/ | / | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| table-name | This attribute will be used to give name to the underlying table created in BPS Engine that will hold the data from this input source. |	/ | / | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+		
+		
+		<<Optional:>> To access external HDFS cluster it is necessary to include IP:PORT in the uri, eg:
+
++---------------------------------------------------------------------------------------------------------
+<attribute name="uri" value="hdfs://<IP:PORT>/<path_to_file>"/>	
++---------------------------------------------------------------------------------------------------------
+		
+<<Kafka>> Data Source
+
++---------------------------------------------------------------------------------------------------------
+<input name="<source_data_name>">
+	<attribute name="uri" value="kafka://<kafka_topic_name>?<format=format_type>"/>
+	<attribute name ="metadata.broker.list" value="<metadata_broker_list>"/>
+	<attribute name="win.length" value="<win_length>"/>
+	<attribute name="slide.win.length" value="<slide_win_length>"/>	
+	<attribute name="group.id" value="<group_id>"/>
+</input>
++---------------------------------------------------------------------------------------------------------
+
+	eg.
+
++---------------------------------------------------------------------------------------------------------
+<input name="radio-stream">
+	<attribute name="uri" value="kafka://radio_up?format=avro"/>
+	<attribute name ="metadata.broker.list" value="localhost:9092"/>
+	<attribute name="win.length" value="300000"/>
+	<attribute name="slide.win.length" value="300000"/>	
+	<attribute name="group.id" value="radio_session"/>
+</input>
++---------------------------------------------------------------------------------------------------------
+	In the example listed above we came across some attributes. They are listed in the table below.
+	
+		<<Note:>> Developer can provide additional kafka configuration supported by the underlaying kafka version.	
+		
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| Name | Description | Default | Valid Values                                           | Importance    	  |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| uri | This attribute represents Kafka Input Adapter (“kafka://”) and Kafka Topic name (“radio_up”). | /|/| mandatory|
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| metadata.broker.list | This attribute represents kakfa server url. | / | / | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| win.length | 	This attribute represents window interval. |	/ | / | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| slide.win.length | This attribute represents sliding window interval. |	/ | / | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| group.id | This attribute represents Kafka Topic group id. |	/ | / | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+
+
+
+<<Flink Data Source Types>>
+
+		All the data sources are described with <<input>> tag in flow.xml file.
+	    Data source represents various types of sources which are fed to the pipeline as an input in order to carry-out operations on.
+
+<<Kafka>> Data Source
+
++---------------------------------------------------------------------------------------------------------
+<input name="<source_data_name>">
+        <attribute name="uri" value="kafka://<kafka_topic_name>?<format=format_type>"/>
+        <attribute name ="metadata.broker.list" value="<metadata_broker_list>"/>
+        <attribute name="eventType" value="<event_type>"/>
+        <attribute name="deserialization.schema" value="<deserialization_Schema>"/>
+        <attribute name="partition.assignment.strategy" value="<partition_strategy>"/>
+        <attribute name="group.id" value="<group_id>"/>
+        <attribute name="schemaRegistry.address" value="<schemaRegistry_address>"/>
+        <attribute name="schemaRegistry.cacheMaximumSize" value="<schemaRegistry_cacheMaximumSize>"/>
+</input>
++---------------------------------------------------------------------------------------------------------
+
+	eg.
+
++---------------------------------------------------------------------------------------------------------
+<input name="kafka-stream">
+   <attribute name="uri" value="kafka://radio_session_topic?format=avro"/>
+   <attribute name="bootstrap.servers" value="10.0.2.15:9092"/>
+   <attribute name="group.id" value="radio_sesssion"/>
+   <attribute name="eventType" value="celltrace.s.ab11.INTERNAL_PER_UE_TRAFFIC_REP"/>
+   <attribute name="deserialization.schema" value="com.ericsson.component.aia.services.bps.flink.kafka.decoder.FlinkKafkaGenericRecordDeserializationSchema"/>
+   <attribute name="partition.assignment.strategy" value="org.apache.kafka.clients.consumer.RangeAssignor"/>
+   <attribute name="schemaRegistry.address" value="http://localhost:8081"/>
+   <attribute name="schemaRegistry.cacheMaximumSize" value="50"/>
+</input>
++---------------------------------------------------------------------------------------------------------
+
+	In the example listed above we came across some attributes. They are listed in the table below.
+
+		<<Note:>> Developer can provide additional kafka configuration supported by the underlaying kafka version.
+
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| Name | Description | Default | Valid Values                                           | Importance    	  |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| uri | This attribute represents Kafka Input Adapter (“kafka://”) and Kafka Topic name (“radio_up”). | -|kafka://radio_session_topic?format=avro| mandatory|
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| bootstrap.servers | This attribute represents server's ip and port on which kafka is running. | - | 10.0.2.15:9092 | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| eventType | This attribute represents type of events sent from Kafka. | - | celltrace.s.ab11.INTERNAL_PER_UE_TRAFFIC_REP | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| group.id | This attribute represents Kafka Topic group id. |	- | radio_session| mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| deserialization.schema | This attribute represents de serialisation schema for events coming from kafka to convert them to Generic Records. |	- |<De serialisation schema class Name>| mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| partition.assignment.strategy | This attribute represents partition assignment strategy. |	- | org.apache.kafka.clients.consumer.RangeAssignor| mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| schemaRegistry.address | This attribute represents the address of the schema registry. |	http://localhost:8081 | http://10.0.2.20:8081 | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| schemaRegistry.cacheMaximumSize | This attribute represents the cache size to be used by schema registry. |	500000 | 50 | optional |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+
+<<Jdbc Data Source >>
+
+		In current release, flink jdbc supports postgres Data base for conversion of Mysql data types to java types only because of the flink version limitaions.
+		In the future release of flink, other Data bases supports will be added.
+
++---------------------------------------------------------------------------------------------------------
+<input name="<source_data_name>">
+    <attribute name="uri" value="jdbc://<JDBC data source>"/>
+    <attribute name="driver" value="jdbc_driver"/>
+    <attribute name="user" value="<jdbc_user>"/>
+    <attribute name="password" value="<jdbc_password>"/>
+    <attribute name="table.name" value="<table_name>"/>
+    <attribute name="query" value="<sql_query>"/>
+</input>
++---------------------------------------------------------------------------------------------------------
+
+	eg.
+
++---------------------------------------------------------------------------------------------------------
+<input name="input-stream">
+    <attribute name="uri" value="jdbc://jdbc:postgresql://10.0.2.15:5432/aiaDemo"/>
+    <attribute name="driver" value="org.postgresql.Driver"/>
+    <attribute name="user" value="postgres"/>
+    <attribute name="password" value="postgres"/>
+    <attribute name="table.name" value="mytable"/>
+    <attribute name="query" value="select * from mytable"/>
+  </input>
++---------------------------------------------------------------------------------------------------------
+
+	In the example listed above we came across some attributes. They are listed in the table below.
+
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| Name | Description | Default | Valid Values                                           | Importance    	  |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| uri | This attribute states which JDBC data source is being used. |-|jdbc://jdbc:postgresql://10.0.2.15:5432/aiaDemo"| mandatory|
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| driver* | This attribute specifies which JDBC driver should be used. Currently only postgres driver is tested with flink jdbc data source/Sink | - | org.postgresql.Driver | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| user | This attribute specifies user that will have access to this DB. |	- | <Name of the Data base> | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| password | This attribute specifies JDBC password. |	- | <Password of the Data base> | mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| table.name | Underlying table name created in BPS Engine that will hold the data from this input source. | - | <Name of the Table in Data base>| mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*
+| query|Sql query to be performed on teh JDBC database in order to get data from table. |<Select * from <table>> | Select * from table with where condition| mandatory |
+*------*-------------*---------*--------------------------------------------------------*--------------------*

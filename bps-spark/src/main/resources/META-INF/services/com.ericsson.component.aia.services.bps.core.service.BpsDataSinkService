@@ -1,0 +1,7 @@
+com.ericsson.component.aia.services.bps.spark.datasinkservice.BpsSparkFileDataSink
+com.ericsson.component.aia.services.bps.spark.datasinkservice.BpsSparkHdfsDataSink
+com.ericsson.component.aia.services.bps.spark.datasinkservice.BpsSparkHiveDataSink
+com.ericsson.component.aia.services.bps.spark.datasinkservice.BpsSparkJdbcDataSink
+com.ericsson.component.aia.services.bps.spark.datasinkservice.BpsSparkAlluxioDataSink
+com.ericsson.component.aia.services.bps.spark.datasinkservice.BpsSparkKafkaDataSink
+com.ericsson.component.aia.services.bps.spark.datasinkservice.BpsSparkDataRoutingSink

@@ -1,0 +1,73 @@
+	------
+	The BPS Service Provider Interface
+	------
+	
+Architectural Design
+
+	
+
+[./images/architecture2.jpg]
+
+
+
+	BPS application is running inside of an Flow Framework Container. Using Declarative API user can describe application using flow file, giving it source, sink and business logic as well. Based on this information, Flow Processing Manager will be able to communicate given parameters to IO Adapter Plugin Manager and Processing Plugin Manager. In that way, configurations for different types of data sink and source and Big Data engines will be chosen. At the moment, BPS provides implementation and configurations for Apache Spark engine. Apache Flink is still work in progress and Apex and Kafka Connect are planned for the future releases.
+	Beam Processing Service currently supports Java SDK, while Scala, R and Python are planned for future releases. BPS also provides Programmatic API.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+~~<<The BPS Service Provider Interface>>
+
+~~	BPS architecture is based on <<S>>ervice <<P>>rovider <<I>>nterface <<(SPI)>>, extending it without modification of its original code base. \
+~~	BPS contributors can add new functionality or application programming interfaces (APIs) by adding new Java Archive (JAR) file onto the classpath or into specific extension directory.
+	
+~~	This section provides detailed overview of BPS SPI's which are intended to address specific aspects of BPS requirements. \
+~~	{{{ https://docs.oracle.com/javase/tutorial/ext/basics/spi.html } Refer to Java SPI Tutorial for more details. }}
+	
+~~[./images/SPI.JPG]
+	
+~~	BPS functionality which requires SPI support, needs to implement <<<GenericService>>> interface or variant of it. \
+~~	Currently three variants of <<<GenericService>>> are depicted in above diagram.
+		  
+~~	* <<BPS Data Source>>
+
+~~	Data source represents the source of input which needs to be fed to the pipeline.
+	
+~~[./images/bpsDataSourceService.JPG]
+
+~~	{{{/apidocs/index.html} For more details refer to Java API Documentation. }}
+
+~~	* <<BPS Step>>
+	
+~~	Step represents logic unit of work that consumes input and applies transformation on it to generate desired output.
+
+~~[./images/bpsJobRunner.JPG]
+
+~~	{{{/apidocs/index.html} For more details refer to Java API Documentation. }}
+		
+~~	* <<BPS Data Sink>>
+
+~~	Data sink provides mechanism to persist the outcome of the steps.
+
+~~[./images/bpsDataSinkService.JPG]
+
+~~	{{{/apidocs/index.html} For more details refer to Java API Documentation. }}
+ 
+ 
+ 

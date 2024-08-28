@@ -1,0 +1,3 @@
+com.ericsson.component.aia.services.bps.core.configuration.rule.impl.BpsAttributeRule
+com.ericsson.component.aia.services.bps.core.configuration.rule.impl.BpsFileUriFormatRule
+com.ericsson.component.aia.services.bps.core.configuration.rule.impl.BpsUriFormatRule

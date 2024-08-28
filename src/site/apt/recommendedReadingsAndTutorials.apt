@@ -1,0 +1,36 @@
+	------
+	Recommended Readings and Tutorials	
+	------
+	
+<<Recommended Readings>>
+
+	Here are some links to interesting tutorials and other learning material. Feel free to check them out:
+	
+	<<Big Data Ecosystem>>
+	
+	{{{https://github.com/zenkay/bigdata-ecosystem#frameworks}Big Data frameworks}}
+	
+	{{{http://bigdata.andreamostosi.name/}Big Data ecosystem table}}
+	
+	
+	<<Big Data Engines>> 
+	
+	{{{http://spark.apache.org/docs/latest/}Apache Spark documentation}}
+	
+	{{{https://ci.apache.org/projects/flink/flink-docs-release-1.1/}Apache Flink Documentation}}
+	
+	
+	<<Streaming>> 
+	
+	{{{http://kafka.apache.org/documentation.html#quickstart}Kafka quickstart}}
+	
+	
+	<<Deployment>>
+	
+	{{{https://docs.docker.com}Docker}}
+	
+	{{{https://github.com/wsargent/docker-cheat-sheet#docker-cheat-sheet}Docker cheat sheet}}
+	
+	{{{https://www.cs.berkeley.edu/~alig/papers/mesos.pdf}Paper introducing Mesos}}
+	
+	{{{https://open.mesosphere.com/advanced-course/}Mesos tutorial}}

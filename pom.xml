@@ -1,0 +1,122 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.ericsson.aia</groupId>
+        <artifactId>integration</artifactId>
+        <version>1.0.48</version>
+    </parent>
+
+    <groupId>com.ericsson.component.aia.services.bps</groupId>
+    <artifactId>bps-service</artifactId>
+    <version>2.0.27-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>Beam Processing Service</name>
+
+    <properties>
+        <git.repository>AIA/com.ericsson.component.aia.services/bps</git.repository>
+
+        <!-- Ericsson AIA's dependencies -->
+        <version.metamodels>2.0.16</version.metamodels>
+        <eventflow-api.version>1.0.16</eventflow-api.version>
+        <kafka.avro.decoder.version>3.0.28</kafka.avro.decoder.version>
+        <transport.version>3.0.20</transport.version>
+        <eventflow-model.version>2.0.7</eventflow-model.version>
+        <data-routing.version>0.0.21</data-routing.version>
+
+
+        <!-- Version used for internal directory structure -->
+        <maven-site-plugin.version>3.3</maven-site-plugin.version>
+        <maven-compiler-plugin.version>1.7</maven-compiler-plugin.version>
+        <commons-configuration.version>1.7</commons-configuration.version>
+
+        <spark.version>3.3.0</spark.version>
+        <spark-xml.version>0.5.0</spark-xml.version>
+        <hive.version>2.3.7</hive.version>
+        <hadoop.version>2.7.4</hadoop.version>
+
+        <!-- Common dependencies-->
+        <java.version>1.7</java.version>
+        <slf4j_api.version>1.7.21</slf4j_api.version>
+        <commons-lang3.version>3.9</commons-lang3.version>
+        <zookeeper.version>3.4.6</zookeeper.version>
+        <parquet-avro.version>1.6.0</parquet-avro.version>
+        <alluxio.version>1.3.0</alluxio.version>
+        <guava.version>14.0.1</guava.version>
+        <commons-dbcp2.version>2.1.1</commons-dbcp2.version>
+
+        <!-- Flink dependencies -->
+        <flink.kafka.connector.10.version>1.2.1</flink.kafka.connector.10.version>
+        <flink.version>1.2.1</flink.version>
+
+        <!-- Versions used in testing -->
+        <jsonassert.version>1.3.0</jsonassert.version>
+        <javax.servlet-api.version>3.1.0</javax.servlet-api.version>
+        <h2.version>1.4.192</h2.version>
+        <velocity.version>1.7</velocity.version>
+        <derby.version>10.12.1.1</derby.version>
+        <powermock.version>1.6.5</powermock.version>
+        <parquet-format.version>2.2.0</parquet-format.version>
+        <datanucleus.version>4.1.17</datanucleus.version>
+        <commons-exec.version>1.3</commons-exec.version>
+        <json.version>20151123</json.version>
+        <j2ssh-maverick.version>1.5.5</j2ssh-maverick.version>
+        <parquet-hadoop.version>1.6.0</parquet-hadoop.version>
+        <postgresql.version>9.4.1212.jre7</postgresql.version>
+        <commons.csv.version>1.3</commons.csv.version>
+        <shrinkwrap-maven.version>2.2.4</shrinkwrap-maven.version>
+        <shrinkwrap.version>1.2.3</shrinkwrap.version>
+        <mysql-connector.version>5.1.40</mysql-connector.version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!-- Added inorder to generate java docs with minor errors when use jdk
+            1.8 -->
+        <additionalparam>-Xdoclint:none</additionalparam>
+    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.ericsson.aia.itpf.common.flow</groupId>
+                <artifactId>eventflow-api</artifactId>
+                <version>${eventflow-api.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>${maven-site-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${maven-compiler-plugin.version}</source>
+                    <target>${maven-compiler-plugin.version}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <modules>
+        <module>common-service</module>
+        <module>bps-core</module>
+        <module>bps-engine</module>
+        <module>bps-spark</module>
+        <module>bps-flink</module>
+        <module>bps-integration</module>
+    </modules>
+
+    <scm>
+        <developerConnection>${ericsson.scm.url}</developerConnection>
+        <connection>${ericsson.scm.url}</connection>
+        <tag>HEAD</tag>
+    </scm>
+
+</project>

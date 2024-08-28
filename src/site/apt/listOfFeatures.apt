@@ -1,0 +1,83 @@
+	------
+	BPS Release Notes
+	------
+
+<<BPS Release Notes>>
+
+	<<BPS 1.0 Release Notes>>	
+	
+	<<Introduction>>
+	
+	BPS 1.0.17 is the first major release marking the start of the AIA Beam Processing Service.
+	
+	To download version 1.0.17 of this software by cloning the BPS project here: {{{https://gerrit.ericsson.se/#/admin/projects/AIA/com.ericsson.component.aia.services/bps}BPS 1.0.17}} and execute the following command:
+	
++----------------------------------------------------------------------------------------------------------------------
+git checkout bps-service-1.0.17
++----------------------------------------------------------------------------------------------------------------------
+	
+	<<New Features>>
+	
+	Spark Batch SQL Template: 
+	
+	* Supports multiple data formats like Text, Json, Avro & Parquet, ORC
+	
+	* Supports input/output technoligies: Kafka, HDFS, HIVE, JDBC, File, Alluxio
+	
+	
+	Spark Streaming Template: 
+	
+	* Supports multiple data formats like Text, Json, Avro & Parquet, ORC
+	
+	* Supports input/output technoligies: Kafka, HDFS, HIVE, JDBC, File, Alluxio
+	
+	<<Improvements>>
+	
+	None.
+	
+	<<Supporting Documentation>>
+
+    * BPS Documentation
+    
+    * {{{http://analytics.ericsson.se/#/Docs/BPS%20documentation/api}BPS API Documentation}}
+    
+    <<Testing>>
+    
+	The following system testing was undertaken:
+	
+	* System testing on Local Linux.
+	
+	* System testing on Vagrant ecosystem.
+	
+	* System testing with Cloudera ecosystem.
+	
+	* Supported testing documentation available here:
+
+    {{{https://confluence-nam.lmera.ericsson.se/download/attachments/184790644/AIA%20BPS%20Test%20Specification.docx?version=1&modificationDate=1478874046000&api=v2}BPS 1.0 Test Specification}}
+    {{{https://confluence-nam.lmera.ericsson.se/download/attachments/184790644/BPS_TEST_REPORT.doc?version=1&modificationDate=1478874047000&api=v2}BPS 1.0 Test Report}}
+    
+	<<Bugs>>
+	
+  	None.
+  	
+	<<Planned Features>>
+
+	* Flink Streaming SQL
+		
+	* Flink SQL
+    
+	* Flink Batch
+    
+	* Spark Streaming SQL
+    
+	* Cassandra and HBase Support
+	
+	<<BPS 1.1 Release Notes>>
+
+	<<New Features>>
+
+	Spark Flink Streaming Template:
+
+	* Supports Kafka as streaming source and sink
+	
+	This feature is available since version {{{https://gerrit.ericsson.se/#/admin/projects/AIA/com.ericsson.component.aia.services/bps}BPS 1.0.23}}

@@ -1,0 +1,312 @@
+	------
+	Tutorial
+	------
+
+<<Tutorial>>
+
+
+	BPS currently provides three templates: Batch Processing (Spark based) Template, Stream Processing (Spark based) Template and Stream Processing (Flink based) Template.\
+	Here is a short tutorial on how to create application using BPS Templates.
+ 
+ 
+	<<What data source can template use?>>
+	
+	Depending on the template type, different configurations can be used.\
+	Here is the list of {{{./dataSource.html}source}} and {{{./dataSink.html}sink data}} that can be used.
+ 
+	<<How can I create new application?>>
+	
+	Use {{{http://analytics.ericsson.se/#/}AIA portal}} and Get Started page in order to create your application.
+ 
+ 
+	<<Example of flow.xml files for Batch and Streaming templates>>
+	
+	Example of Batch Processing (Spark based) Template flow.xml
+	
++---------------------------------------------------------------------------------------------------------
+<?xml version="1.0" encoding="UTF-8"?>
+<FlowDefinition xmlns="urn:com:ericsson:schema:xml:oss:fbp_flow" xmlns:oc="urn:com:ericsson:schema:xml:oss:oss_common" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ oc:ns="com.ericsson.oss.services" oc:name="CSLSolutionSet" oc:version="1.0.0">
+ <oc:modelCreationInfo author="eachsaj" creationDate="25/5/2016">
+ <oc:designedModel componentId="BatchProcessingSpark"/>
+ </oc:modelCreationInfo>
+ <oc:desc>BPS Batch Spark Test for JDBC to HDFS Parquet</oc:desc>
+ <input name="jdbc-input">
+ <attribute name="uri" value="JDBC://jdbc:postgresql://10.0.2.15:5432/test2"/>
+ <attribute name="driver" value="org.postgresql.Driver"/>
+ <attribute name="user" value="postgres"/>
+ <attribute name="password" value="postgres"/>
+ <attribute name="table.name" value="cell_performance_data"/>
+ </input>
+ <output name="hdfs-parquet-output">
+ <attribute name="uri" value="hdfs://10.0.2.15:8020/input/hdfs_output_parquet_files" />
+ <attribute name="data.format" value="parquet" /> 
+ </output>
+ <step name="sales-analysis">
+ <attribute name="uri" value="spark-batch://cell-analysis"/>
+ <attribute name="sql" value="SELECT * FROM cell_performance_data"/>
+ </step>
+ <path>
+ <from uri="jdbc-input"/>
+ <to uri="sales-analysis"/>
+ <to uri="hdfs-parquet-output"/>
+ </path>
+</FlowDefinition>
++---------------------------------------------------------------------------------------------------------
+
+
+	In order to get more familiar with flow file, please check {{{./concepts.html}this chapter}}.
+ 
+	Example of Stream Processing (Spark based) Template flow.xml
+
++---------------------------------------------------------------------------------------------------------
+<?xml version="1.0" encoding="UTF-8"?>
+<FlowDefinition xmlns="urn:com:ericsson:schema:xml:oss:fbp_flow" xmlns:oc="urn:com:ericsson:schema:xml:oss:oss_common" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ oc:ns="com.ericsson.oss.services" oc:name="CSLSolutionSet" oc:version="1.0.0">
+ <oc:modelCreationInfo author="eachsaj" creationDate="25/5/2016">
+ <oc:designedModel componentId="BatchProcessingSpark"/>
+ </oc:modelCreationInfo>
+ <oc:desc>ExtEps Test for an extension Simple Batch Processing</oc:desc>
+ <input name="kafka-input">
+ <attribute name="uri" value="kafka://radio_session_topic?format=avro"/>
+ <attribute name="metadata.broker.list" value="localhost:9092"/>
+ <attribute name="group.id" value="radio"/>
+ <attribute name="window.length" value="1000"/>
+ <attribute name="slide.window.length" value="1000"/>
+ </input>
+ <output name="kafka-output">
+ <attribute name="uri" value="kafka://radio_session_output?format=avro"/>
+ <attribute name="bootstrap.servers" value="localhost:9092"/>
+ <attribute name="eventType" value="correlation.LTE_ERAB_SESSION"/>
+ </output>
+ <step name="cell-analysis">
+ <attribute name="uri" value="spark-streaming://cell-analysis"/>
+ <attribute name="driver-class" value="com.ericsson.aia.bps.streaming.correlations.SampleSparkStreaming"/>
+ </step>
+ <path>
+ <from uri="kafka-input"/>
+ <to uri="cell-analysis"/>
+ <to uri="kafka-output"/>
+ </path>
+</FlowDefinition>
++---------------------------------------------------------------------------------------------------------
+
+	In order to get more familiar with flow file, please check {{{./concepts.html}this chapter}}.
+	
+	
+	Example of Stream Processing (Flink based) Template flow.xml
+	
++---------------------------------------------------------------------------------------------------------
+<?xml version="1.0" encoding="UTF-8"?>
+<FlowDefinition xmlns="urn:com:ericsson:schema:xml:oss:fbp_flow" xmlns:oc="urn:com:ericsson:schema:xml:oss:oss_common" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" oc:ns="com.ericsson.oss.services"
+oc:name="CSLSolutionSet" oc:version="1.0.0">
+<oc:modelCreationInfo author="eachsaj" creationDate="today">
+<oc:designedModel componentId="someComponentId" />
+</oc:modelCreationInfo>
+<oc:desc>ExtEps Test for an extension Simple Stream</oc:desc>
+    <input name="input-stream">
+        <attribute name="uri" value="kafka://radio_session_topic"/>
+        <attribute name ="bootstrap.servers" value="localhost:9092"/>
+        <attribute name ="zookeeper.connect" value="localhost:2181"/>
+        <attribute name="group.id" value="radio_sesssion"/>
+        <attribute name="deserialization.schema" value="com.ericsson.component.aia.services.bps.flink.kafka.decoder.FlinkKafkaGenericRecordDeserializationSchema"/>
+        <attribute name="partition.assignment.strategy" value="org.apache.kafka.clients.consumer.RangeAssignor"/>
+        <attribute name="version" value="9"/>
+    </input>
+    <output name="output-stream">
+        <attribute name="uri" value="kafka://radio_session_topic_out?format=avro"/>
+        <attribute name ="bootstrap.servers" value="localhost:9092"/>
+        <attribute name="eventType" value="pojo.POJO"/>
+        <attribute name="serialization.schema" value="com.ericsson.component.aia.services.bps.flink.kafka.encoder.FlinkKafkaGenericRecordSerializationSchema"/>
+        <attribute name="version" value="9"/>
+    </output>
+    <output name="local-store">
+        <attribute name="uri" value="file:///tmp/flink/"/>
+        <attribute name="data.format" value="txt"/>
+    </output>
+    <step name="ups-flink-streaming">
+        <attribute name="uri" value="flink-streaming://SampleFlinkStreamingHandler"/>
+        <attribute name="driver-class" value="com.ericsson.aia.bps.adapters.handler.SampleFlinkStreamingHandler" />
+        <attribute name="schemaRegistry.address" value="http://localhost:8081/" />
+        <attribute name="schemaRegistry.cacheMaximumSize" value= "5000000" />
+    </step>
+    <path>
+        <from uri="input-stream" />
+        <to uri="ups-flink-streaming" />
+        <to uri="output-stream" />
+        <to uri="local-store" />      
+    </path>
+</FlowDefinition>
++---------------------------------------------------------------------------------------------------------
+	
+	In order to get more familiar with flow file, please check {{{./concepts.html}this chapter}}.
+	
+	
+	<<Sample of code for Spark based Streaming template application>>
+ 
+	In order to implement logic for application, in case of applications based on Spark based Streaming template, developer should extend <<SparkStreamingJobRunner>> class.\
+	Here is a sample of one implementation:
+	
++---------------------------------------------------------------------------------------------------------
+import static com.ericsson.component.aia.services.bps.spark.common.KafkaConfigEnum.SLIDE_WINDOW_LENGTH;
+
+import static com.ericsson.component.aia.services.bps.spark.common.KafkaConfigEnum.WINDOW_LENGTH;
+
+import java.util.Properties;
+
+import org.apache.avro.generic.GenericRecord;
+
+import org.apache.spark.api.java.JavaRDD;
+
+import org.apache.spark.api.java.function.Function;
+
+import org.apache.spark.api.java.function.VoidFunction;
+
+import org.apache.spark.sql.DataFrame;
+
+import org.apache.spark.streaming.Durations;
+
+import org.apache.spark.streaming.api.java.JavaDStream;
+
+import org.apache.spark.streaming.api.java.JavaPairDStream;
+
+import org.apache.spark.streaming.api.java.JavaPairInputDStream;
+
+import scala.Tuple2;
+
+import com.ericsson.component.aia.services.bps.spark.jobrunner.SparkStreamingJobRunner;
+
+public class SampleSparkStreaming extends SparkStreamingJobRunner {
+
+    private static final long serialVersionUID = 5914257776162053954L; 
+
+    @SuppressWarnings("unchecked")
+
+    @Override
+
+    public void executeJob() {
+
+        final Properties properties = inputStreams.getStreams("kafka-input").getProperties();
+
+        final long windowLength = Long.parseLong(properties.getProperty(WINDOW_LENGTH.getConfiguration()));
+
+        final long slideWindow = Long.parseLong(properties.getProperty(SLIDE_WINDOW_LENGTH.getConfiguration()));
+
+        //Gets Kafka Stream as defined in flow.xml
+
+        final JavaPairInputDStream<String, GenericRecord> stream = (JavaPairInputDStream<String, GenericRecord>) inputStreams.getStreams(
+
+                "kafka-input").getStreamRef();
+
+        final JavaPairDStream<String, GenericRecord> window = stream.window(Durations.seconds(windowLength), Durations.seconds(slideWindow));
+
+        final JavaDStream<GenericRecord> map = window.map(new Function<Tuple2<String, GenericRecord>, GenericRecord>() { 
+
+            private static final long serialVersionUID = -7618430765502060910L; 
+
+            @Override
+
+            public GenericRecord call(final Tuple2<String, GenericRecord> v1) throws Exception {
+
+                System.out.println("Inside window.map...returning ..." + v1._2.toString());
+
+                return v1._2;
+
+            }
+
+        }); 
+
+        map.foreachRDD(new VoidFunction<JavaRDD<GenericRecord>>() { 
+
+            private static final long serialVersionUID = -7505835099258262820L; 
+
+            @Override
+
+            public void call(final JavaRDD<GenericRecord> v1) throws Exception {
+
+                System.out.println("Inside map.mapPartitionsToPair ...foreachRDD ...");
+
+                final DataFrame fileDF = getHiveContext().createDataFrame(v1, POJO.class);
+
+                outGoingStreams.write(fileDF);
+            }
+        });
+    } 
+
+    //Some SCHEMA class
+
+    class POJO { 
+
+    }
+}
++---------------------------------------------------------------------------------------------------------
+
+<<Sample of code for Flink based Streaming template application>>
+ 
+	In order to implement logic for application, in case of applications based on Spark based Streaming template, developer should extend <<BpsFlinkStreamingJobRunner>> class.\
+	Here is a sample of one implementation:
+	
++---------------------------------------------------------------------------------------------------------
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.avro.Schema.Field;
+import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.util.Utf8;
+import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.ericsson.component.aia.services.bps.core.service.streams.BpsStream;
+import com.ericsson.component.aia.services.bps.flink.jobrunner.BpsFlinkStreamingJobRunner;
+
+public class SampleFlinkStreamingJobRunner extends BpsFlinkStreamingJobRunner {
+
+    private static final long serialVersionUID = 1L;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SampleFlinkStreamingJobRunner.class);
+
+    @Override
+    public void executeJob() {
+        final BpsStream<DataStream<GenericRecord>> flinkStream = getBpsInputStreams().<DataStream<GenericRecord>> getStreams("input-stream");
+        final DataStream<GenericRecord> dataStream = flinkStream.getStreamRef();
+
+        //Some transformation
+        final DataStream<POJO> pojo = dataStream.map(new MapFunction<GenericRecord, POJO>() {
+            private static final long serialVersionUID = 3961882164579010828L;
+
+            @Override
+            @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+            public POJO map(final GenericRecord genericRecord) throws Exception {
+                final POJO pojo = new POJO();
+                final java.lang.reflect.Field[] typeFields = pojo.getClass().getDeclaredFields();
+                final Map<String, java.lang.reflect.Field> typeFieldNames = new HashMap<String, java.lang.reflect.Field>();
+                for (int index = 0; index < typeFields.length; index++) {
+                    typeFields[index].setAccessible(true);
+                    typeFieldNames.put(typeFields[index].getName(), typeFields[index]);
+                }
+                for (final Field field : genericRecord.getSchema().getFields()) {
+                    Object col = genericRecord.get(field.name());
+                    if (col != null && col instanceof Utf8) {
+                        col = col.toString();
+                    }
+                    if (typeFieldNames.containsKey(field.name())) {
+                        typeFieldNames.get(field.name()).set(pojo, col);
+                    }
+                }
+                return pojo;
+            }
+        });
+        persistDataStream(pojo);
+        LOGGER.info("EpsFlinkStreamingHandler executeJob successfully completed");
+
+    }
+
+    @Override
+    public void cleanUp() {
+
+    }
+}
++---------------------------------------------------------------------------------------------------------
+

@@ -1,0 +1,61 @@
+	------
+	Beam Processing Service
+	------
+
+<<About BPS>>
+
+	<<Beam Processing Service (BPS)>> is an <<unified batch and stream processing model>> that can be used to create a data processing pipeline based on simple flow.
+	
+	\
+	Since BPS provides higher level of abstraction for input and output, user is left to focus on domain specific logic and create a simple flow design to describe it.\
+	Flow design is based on strong conventions and best practices, which allow you to rapidly create, test and verify domain specific logic.
+
+What is the main focus of BPS?
+	
+	Main focus of BPS is to leave <<user free to focus on business logic and reuse templates>> already provided by BPS for data processing.
+	This also means that any sort of data source and data sink can be used in order to accommodate users business logic based on the order of execution steps.\ 
+
+
+
+
+Beam Processing Service SDKs
+
+    Beam Processing Service SDKs provide declarative and programming APIs for defining, extraction, loading and creation of analytics application on any data set in a batch or nearly real time fashion. BPS provides template based approach that generates 75% or more code at time of creation so developer can focus on business logic. Use the Beam Processing Service SDK of your choice to build a program that defines your data processing pipeline.
+    
+	Beam Processing Service currently supports the following language-specific SDKs:
+
+	
+*-----------------------------------------------------*-------------------------------------------------------*
+| Language                                            | SDK Status    								|
+*-----------------------------------------------------*-------------------------------------------------------*
+| {{{ https://java.com/en/ } Java }} | Active Development |
+*--------------------------------------------------------*----------------------------------------------------*
+| {{{ http://www.scala-lang.org/ } Scala }} | Coming Soon |
+*--------------------------------------------------------*----------------------------------------------------*
+| {{{ https://www.r-project.org/ } R }} | Planned for Future Releases |
+*--------------------------------------------------------*----------------------------------------------------*
+| {{{ https://www.python.org/ } Python }} | Planned for Future Releases |
+*--------------------------------------------------------*----------------------------------------------------*
+
+	BPS is platform open to external contributions, so other languages can be added. Community is invited to contribute.
+
+
+Beam Processing Service Pipeline Runners
+
+	Beam Processing Service Pipeline Runners interpret the data processing pipeline you define with your BPS program into the API compatible with the distributed processing back-end of your choice. When you run your BPS program, you’ll need to specify the appropriate runner for the back-end where you want to execute your pipeline.
+
+	Beam Processing Service currently supports Runners that work with the following distributed processing back-ends:
+
+*-----------------------------------------------------*-------------------------------------------------------*
+| Runner                                           | Status    								|
+*-----------------------------------------------------*-------------------------------------------------------*
+| {{{ http://spark.apache.org/}Apache Spark}} | Active Development |
+*--------------------------------------------------------*----------------------------------------------------*
+| {{{ https://flink.apache.org/}Apache Flink}} | Coming Soon |
+*--------------------------------------------------------*----------------------------------------------------*
+
+Getting Started with Beam Processing Service
+ 
+	Interested in working with BPS? Great! Get started {{{./quickStart.html}here}}.
+
+

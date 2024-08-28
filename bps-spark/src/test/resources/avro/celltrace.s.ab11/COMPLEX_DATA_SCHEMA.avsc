@@ -1,0 +1,19 @@
+{
+  "type": "record",
+  "name": "COMPLEX_DATA_SCHEMA",
+  "namespace": "celltrace.s.ab11",
+  "fields": [
+    {
+      "name": "_NE",
+      "type": "string"
+    },
+    {
+      "name": "STRUCT_ARRAY_DATA",
+      "type": {"type":"array",  "items":{"type":"record", "name":"myrecord", "fields":[{ "name":"int1", "type": "long"}]}} 
+    },
+    {
+      "name": "PRIMITIVE_ARRAY_DATA",
+      "type": {"type":"array",  "items":"string"} 
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FlowDefinition xmlns="urn:com:ericsson:schema:xml:oss:fbp_flow"
+	xmlns:oc="urn:com:ericsson:schema:xml:oss:oss_common" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	oc:ns="com.ericsson.oss.services" oc:name="CSLSolutionSet" oc:version="1.0.0">
+	<oc:modelCreationInfo author="ashish_chudasama"
+		creationDate="today">
+		<oc:designedModel componentId="someComponentId" />
+	</oc:modelCreationInfo>
+	<oc:desc>BPS Flow Test</oc:desc>
+	
+	<input name="jdbc-input">
+	    <attribute name="uri" value="JDBC://jdbc:postgresql://127.0.0.1:5432/aiademo"/>
+	    <attribute name="jdbc.driver" value="org.postgresql.Driver"/>
+	    <attribute name="jdbc.user" value="aiauser"/>
+	    <attribute name="jdbc.password" value="aiauser"/>
+	    <attribute name="table" value="CELL_PERFORMANCE_DATA_INPUT"/>
+	</input>
+ 
+	 <output name="jdbc-output">
+	    <attribute name="uri" value="JDBC://jdbc:postgresql://127.0.0.1:5432/aiademo"/>
+	    <attribute name="jdbc.driver" value="org.postgresql.Driver"/>
+	    <attribute name="jdbc.user" value="aiauser"/>
+	    <attribute name="jdbc.password" value="aiauser"/>
+	    <attribute name="table" value="CELL_PERFORMANCE_DATA_OUTPUT"/>
+	 </output>
+ 
+	<step name="spark-batch">
+    	<attribute name="uri" value="spark-batch://cell-analysis"/>
+    	<attribute name="sql" value="SELECT * FROM CELL_PERFORMANCE_DATA_INPUT"/>
+	</step>
+
+	<path>
+		<from uri="jdbc-input" />
+		<to uri="spark-batch" />
+	    <to uri="jdbc-output" />
+	</path>
+</FlowDefinition>
